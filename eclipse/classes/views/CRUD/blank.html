@@ -1,0 +1,42 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.blank.title', type.modelName) /}
+
+<div id="crudBlank" class="${type.name}">
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
+			</h1>
+			<div class="pull-right">
+				<ul class="breadcrumb">
+					<li><a href="/"> <i class="icon-dashboard"></i></a></li>
+					<li class="separator"><i class="icon-angle-right"></i></li>
+					<li><a href="@{list()}">&{'crud.list.title', type.name}</a></li>
+					<li class="separator"><i class="icon-angle-right"></i></li>
+					<li class="active">&{'new'}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+    <div class="objectForm">
+		#{form action:@create(), enctype:'multipart/form-data', class:'form
+		form-horizontal validate-form'} #{crud.form /}
+		<div class="form-actions" style="margin-bottom: 0">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+					<input type="submit" class="btn btn-primary btn-sm" name="_save"
+						value="&{'crud.save', type.modelName}" /> <input type="submit"
+						class="btn btn-primary btn-sm" name="_saveAndContinue"
+						value="&{'crud.saveAndContinue', type.modelName}" /> <input
+						type="submit" class="btn btn-primary btn-sm"
+						name="_saveAndAddAnother"
+						value="&{'crud.saveAndAddAnother', type.modelName}" />
+				</div>
+			</div>
+		</div>
+    #{/form}
+    </div>
+
+</div>

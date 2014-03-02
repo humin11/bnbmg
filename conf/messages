@@ -1,0 +1,34 @@
+# You can specialize this file for each language.
+# For example, for French create a messages.fr file
+#
+application.name=北新建材采购比价平台
+
+tender=招标信息
+profile=基本信息
+settings=设置
+login=登录
+logout=登出
+supplier=供应商管理
+supplier.info=供应商信息
+supplier.comment=反馈意见
+supplier.qualification=供应商资质
+supplier.import=导入供应商
+supplier.manager=供应商管理
+supplier.account.no=还没有登记供应商，请先注册
+
+request=采购需求管理
+request.new=发布采购需求
+request.manager=采购需求管理
+
+user=用户管理
+user.new=添加用户
+user.manager=用户管理
+user.role.manager=用户权限管理
+
+hatech.about=关于同创
+
+#login
+username=用户名
+password=密码
+submit=提交
+password.forget=忘记密码

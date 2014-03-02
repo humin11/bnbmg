@@ -1,0 +1,25 @@
+
+#{field 'object.' + _name}
+<label class="control-label col-sm-3" for="${field.id}">
+    &{_name}
+</label>
+<div class="col-sm-4 controls">
+	<select class="form-control" id="${field.id}" name="${field.name}">
+	        %{ _property.choices.each() { }%
+	        %{
+	                selected = false;
+	                if(field.error?.message != 'validation.required') {
+	                    selected = it == _value;
+	                }
+	                label = it.toString()
+	
+	        }%
+	        <option name="${it.name()}" ord="${it.ordinal()}" value="${it.name()}" ${selected ? 'selected="true"'.raw() : ''}>${label}</option>
+	        %{ } }%
+	</select>
+	
+	#{ifError field.name}
+	    <span class="help-block has-error">${field.error.raw()}</span>
+	#{/ifError}
+</div>
+#{/field}

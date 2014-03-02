@@ -1,0 +1,17 @@
+<ul class="breadcrumb">
+    <li><a href="@{CRUD.index()}">&{'crud.home'}</a></li>
+    
+    #{if _caller.type}
+		<li class='separator'><i class='icon-angle-right'></i></li>
+		<li><a href="@{list()}">&{_caller.type.name}</a></li>
+    #{/if}
+    #{if _caller.object?._key()}
+        <li class='separator'><i class='icon-angle-right'></i></li>
+		<li><a href="@{show(_caller.object._key())}">${_caller.object?.toString()?.escape()?.raw()}</a></li>
+    #{/if}
+    #{if request.actionMethod == 'blank' || request.actionMethod == 'create'}
+        <li class='separator'><i class='icon-angle-right'></i></li>
+		<li><a href="@{blank()}">&{'crud.blank'}</a></li>
+    #{/if}
+</ul>
+
