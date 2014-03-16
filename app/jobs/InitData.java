@@ -35,7 +35,7 @@ public class InitData extends Job
         if (User.getByUserName("system") == null)
         {
             User user = new User("system",
-                                 "System",
+                                 "Passw0rd",
                                  ApplicationRole.getByName("system"));
             user.save();
         }

@@ -30,15 +30,11 @@
 	          <img width="200" height="35" class="logo" alt="Flatty" src="@{'/public/images/logo.png'}" />
 	          <!-- <img width="21" height="21" class="logo-xs" alt="Flatty" src="/public/images/logo_xs.svg" /> -->
 	        </a>
-	        <a class='toggle-nav btn pull-left' href='#'>
-	          <i class='icon-reorder'></i>
-	        </a>
 	        
 	        <ul class='nav'>
 				<li class='dropdown dark user-menu'>
 					<a class='dropdown-toggle' data-toggle='dropdown' href='#'> 
-						<img width="23" height="23" alt="Mila Kunis" src="@{'/public/images/avatar.jpg'}" /> 
-						<span class='user-name'>Mila Kunis</span> <b class='caret'></b>
+						<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<span class='user-name'>${session.get("username")}</span> <b class='caret'></b>
 					</a>
 					<ul class='dropdown-menu'>
 						<li>
@@ -54,12 +50,12 @@
 					</ul>
 				</li>
 			</ul>
-	        <form action='search_results.html' class='navbar-form navbar-right hidden-xs' method='get'>
+	        <!-- <form action='search_results.html' class='navbar-form navbar-right hidden-xs' method='get'>
 	          <button class='btn btn-link icon-search' name='button' type='submit'></button>
 	          <div class='form-group'>
 	            <input value="" class="form-control" placeholder="Search..." autocomplete="off" id="q_header" name="q" type="text" />
 	          </div>
-	        </form>
+	        </form> -->
 	      </nav>
 	    </header>
 	    <div id='wrapper'>
@@ -75,12 +71,8 @@
 	            </form>
 	          </div>
 	          <ul class='nav nav-stacked'>
-	            <li class='active'>
-	              <a href='index.html'>
-	                <i class='icon-dashboard'></i>
-	                <span>Dashboard</span>
-	              </a>
-	            </li>
+	          	#{deadbolt.restrict roles:[['superadmin'],['user']] }
+	           
 	            <!-- For Supplier (USER) -->
 	            <li class=''>
 	              <a class="dropdown-collapse" href="#"><i class='icon-edit'></i>
@@ -89,6 +81,7 @@
 	              </a>
 	      
 	            </li>
+	            
 	            <li>
 	              <a class='dropdown-collapse ' href='#'>
 	                <i class='icon-tint'></i>
@@ -116,9 +109,9 @@
 	                </li>
 	              </ul>
 	            </li>
-	            
+	            #{/deadbolt.restrict}
 	            <!-- For Admin -->
-	            
+	            #{deadbolt.restrict roles:[['superadmin'],['admin']] }
 	            <li>
 	              <a class='dropdown-collapse ' href='#'>
 	                <i class='icon-cogs'></i>
@@ -127,25 +120,22 @@
 	              </a>
 	              <ul class='nav nav-stacked'>
 	                <li class=''>
-	                  <a href='charts.html'>
+	                  <a href='@{Users.blank()}'>
 	                    <i class='icon-bar-chart'></i>
 	                    <span>&{'user.new'}</span>
 	                  </a>
 	                </li>
 	                <li class=''>
-	                  <a href='address_book.html'>
+	                  <a href='@{Users.list()}'>
 	                    <i class='icon-envelope'></i>
 	                    <span>&{'user.manager'}</span>
 	                  </a>
 	                </li>
-	                <li class=''>
-	                  <a href='chats.html'>
-	                    <i class='icon-comments'></i>
-	                    <span>&{'user.role.manager'}</span>
-	                  </a>
-	                </li>
+	                
 	              </ul>
 	            </li>
+	            #{/deadbolt.restrict}
+	            #{deadbolt.restrict roles:[['superadmin'],['admin'],['system']] }
 	            <li>
 	              <a class='dropdown-collapse ' href='#'>
 	                <i class='icon-book'></i>
@@ -154,19 +144,21 @@
 	              </a>
 	              <ul class='nav nav-stacked'>
 	                <li class=''>
-	                  <a href='invoice.html'>
+	                  <a href='@{Requests.blank()}'>
 	                    <i class='icon-money'></i>
 	                    <span>&{'request.new'}</span>
 	                  </a>
 	                </li>
 	                <li class=''>
-	                  <a href='gallery.html'>
+	                  <a href='@{Requests.list()}'>
 	                    <i class='icon-picture'></i>
 	                    <span>&{'request.manager'}</span>
 	                  </a>
 	                </li>
 	              </ul>
 	            </li>
+	            #{/deadbolt.restrict}
+	            #{deadbolt.restrict roles:[['superadmin'],['admin'],['system'],['operator']] }
 	            <li>
 	              <a class='dropdown-collapse ' href='#'>
 	                <i class='icon-cog'></i>
@@ -175,18 +167,19 @@
 	              </a>
 	              <ul class='nav nav-stacked'>
 	                <li class=''>
-	                  <a href='closed_navigation.html'>
+	                  <a href='@{Profiles.list()}'>
 	                    <i class='icon-caret-right'></i>
 	                    <span>&{'supplier.manager'}</span>
 	                  </a>
 	                </li>
 	              </ul>
 	            </li>
+	            #{/deadbolt.restrict}
 	          </ul>
 	        </div>
 	      </nav>
 	      <section id='content'>
-	        <div class='container'>
+	        <div class='container-fluid'>
 	          
 	          #{doLayout /}
 	          <footer id='footer'>

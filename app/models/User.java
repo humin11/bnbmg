@@ -24,6 +24,8 @@ import play.db.jpa.Model;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import controllers.CRUD.Exclude;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,9 +36,10 @@ import java.util.List;
 public class User extends Model implements RoleHolder
 {
     @Required
-    public String userName;
+    public String username;
 
-    public String fullName;
+    @Exclude
+    public String name;
     
     @Password
     @Required
@@ -47,11 +50,12 @@ public class User extends Model implements RoleHolder
     public ApplicationRole role;
 
     public User(String userName,
-                String fullName,
+                String password,
                 ApplicationRole role)
     {
-        this.userName = userName;
-        this.fullName = fullName;
+        this.username = userName;
+        this.password = password;
+        this.name = userName;
         this.role = role;
     }
 
@@ -63,7 +67,7 @@ public class User extends Model implements RoleHolder
     @Override
     public String toString()
     {
-        return this.userName;
+        return this.username;
     }
 
 
@@ -71,4 +75,9 @@ public class User extends Model implements RoleHolder
     {
         return Arrays.asList(role);
     }
+    
+    public static User connect(String username, String password) {
+        return find("byUsernameAndPassword", username, password).first();
+    }
+
 }
