@@ -1,4 +1,67 @@
 #{extends 'Secure/layout.html' /}
+#{set title:messages.get('login') /}
+
+<!-- Container -->
+<div class="signin-container">
+
+    <!-- Left side -->
+    <div class="signin-info">
+        <a href="/" class="logo">
+            <img src="@{'/public/images/logo.png'}" alt="" style="margin-top: -5px;width: 16px;">&nbsp;
+        &{'application.name'}
+        </a> <!-- / .logo -->
+        <div class="slogan">
+            和谐、绩效、责任
+        </div> <!-- / .slogan -->
+        <ul>
+            <li><i class="fa fa-sitemap signin-icon"></i> 与自然和谐、与社会和谐、与竞争者和谐、与员工和谐</li>
+            <li><i class="fa fa-file-text-o signin-icon"></i> 追求持续一流的绩效，争取国内领先和顶尖</li>
+            <li><i class="fa fa-heart signin-icon"></i> 自觉地履行央企应负的责任</li>
+        </ul> <!-- / Info list -->
+    </div>
+    <!-- / Left side -->
+
+    <!-- Right side -->
+    <div class="signin-form">
+
+        <!-- Form -->
+        <form action="@{authenticate()}" id="signin-form_id" method="post">
+            <div class="signin-text">
+                <span>&{'login'}</span>
+            </div> <!-- / .signin-text -->
+
+            <div class="form-group w-icon">
+                <input type="text" name="username" id="username" class="form-control input-lg" placeholder="&{'username'}">
+                <span class="fa fa-user signin-form-icon"></span>
+            </div> <!-- / Username -->
+
+            <div class="form-group w-icon">
+                <input type="password" name="password" id="password" class="form-control input-lg" placeholder="&{'password'}">
+                <span class="fa fa-lock signin-form-icon"></span>
+            </div> <!-- / Password -->
+
+            <div class="form-actions">
+                <input type="submit" value="&{'submit'}" class="signin-btn pull-right bg-primary">
+                *{<a href="#" class="forgot-password" id="forgot-password-link">Forgot your password?</a>}*
+            </div> <!-- / .form-actions -->
+        </form>
+        <!-- / Form -->
+
+        <!-- "Sign In with" block -->
+        *{<div class="signin-with">}*
+            *{<!-- Facebook -->}*
+            *{<a href="#" class="signin-with-btn" style="background:#4f6faa;background:rgba(79, 111, 170, .8);">Sign In with <span>Facebook</span></a>}*
+        *{</div>}*
+        <!-- / "Sign In with" block -->
+
+    </div>
+    <!-- Right side -->
+</div>
+<!-- / Container -->
+
+<div class="not-a-member">
+    还没有成为我们的供应商？ <a href="@{Vender.register()}">现在就注册</a>
+</div>
 
 <div class='login-container'>
             <div class='container'>

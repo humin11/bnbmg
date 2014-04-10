@@ -1,0 +1,127 @@
+#{extends 'main.html' /}
+#{set title:req.name /}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h1 class="pull-left">
+                <i class="icon-ok"></i> <span><a href="@{Requests.list()}"> ${req.name}</a></span>
+            </h1>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel" style="margin-bottom:0;">
+            <div class="panel-heading">
+                <div class="panel-title">参与投标企业</div>
+            </div>
+            <div class="panel-body">
+                <div class="responsive-table">
+                    <div class="scrollable-area">
+                        <table class="table table-bordered" style="margin-bottom:0;">
+                            <thead>
+                            <tr>
+                                <th>
+                                &{'name'}
+                                </th>
+                                <th>物资类型</th>
+                                <th>型号</th>
+                                <th>厚度</th>
+                                <th>宽度</th>
+                                <th>克重</th>
+                                <th>其他</th>
+                                <th>采购量</th>
+                                <th>单位</th>
+                                <th>到货时间</th>
+                                <th>需求工厂明细</th>
+                                <th>1st报价</th>
+                                <th>2nd报价</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            #{list items: toubiaos, as:'toubiao'}
+                                %{
+                                    for(int i=0; i<toubiao.baojias.size(); i++){
+                                    def bj = toubiao.baojias.get(i);
+                                }%
+                                <tr>
+                                    <td>
+                                        ${toubiao.profile.name} - ${toubiao.payStyle} - ${toubiao.invoice} - ${toubiao.comments}
+                                            #{if toubiao.request.status==true}
+                                                #{if toubiao.status=="1"}
+                                                    <label class="label label-success">已中标</label>
+                                                #{/if}
+                                                #{elseif toubiao.status=="2"}
+                                                    <label class="label label-danger">未中标</label>
+                                                #{/elseif}
+                                            #{/if}
+                                            #{else}
+                                                <a href="@{Vender.zhongbiao(toubiao.id)}" class="btn btn-xs btn-success">中标</a>
+                                                <a href="javascript:again('${toubiao.id}')"  class="btn btn-xs btn-warning">再次竞价</a>
+                                            #{/else}
+                                    </td>
+                                    <td>${bj.specification.material.name}</td>
+                                    <td>${bj.specification.specification}</td>
+                                    <td>${bj.specification.thickness}</td>
+                                    <td>${bj.specification.width}</td>
+                                    <td>${bj.specification.weight}</td>
+                                    <td>${bj.specification.others}</td>
+                                    <td>${bj.specification.amount}</td>
+                                    <td>${bj.specification.unit}</td>
+                                    <td>${bj.specification.arrival_time}</td>
+                                    <td><a href="@{Specs.attachment(bj.specification.id,'detail_spec')}" target="_blank">文件</a> </td>
+                                    <td>
+                                        ${bj.price}
+                                    </td>
+                                    <td>
+                                    #{if bj.secondPrice!=null}${bj.secondPrice} #{/if}
+                                    </td>
+
+                                </tr>
+                                %{}}%
+                            #{/list}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form form-horizontal" method="post" action="@{Vender.zbAgain()}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">再次竞价</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="toubiaoid" name="toubiaoid" value="" />
+                    <div class="form-group dark">
+                        <label class="col-md-3 control-label" for="inputPassword4">再次竞价理由</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" id="againComments" name="againComments"  data-rule-required="true"></textarea>
+                        </div>
+                    </div>
+                </div> <!-- / .modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+                    <button type="submit" class="btn btn-primary">&{'save'}</button>
+                </div>
+            </form>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
+
+<script>
+    $(".table").dataTable().rowGrouping();
+    function again(id){
+        $("#toubiaoid").val(id);
+        $("#myModal").modal();
+    }
+</script>

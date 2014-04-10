@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -17,13 +18,15 @@ public class Profile extends Model {
 	public User user;
 	
 	public String name;
-	
+
 	@ManyToMany
-	public List<Material> materials;
+	public List<Material> materials = new ArrayList<Material>();
 	
 	public String registration_number;
 	
 	public String registration_assets;
+
+    public String registration_assets_unit;
 	
 	public String registration_address;
 	
@@ -48,6 +51,8 @@ public class Profile extends Model {
 	public String contact_job;
 	
 	public String contact_phone;
+
+    public String contact_email;
 	
 	public String sales_name;
 	
@@ -56,7 +61,11 @@ public class Profile extends Model {
 	public String sales_phone;
 	
 	@ManyToMany
-	public List<Files> files;
+	public List<Files> files = new ArrayList<Files>();
+
+    @Exclude
+    @ManyToMany
+    public List<Request> requests = new ArrayList<Request>();
 	
-	public Boolean is_audit=false;
+	public int is_audit=0;
 }

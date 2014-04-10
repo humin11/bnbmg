@@ -16,16 +16,34 @@
         _body.setProperty('fieldsHandler', fieldsHandler);
         _body.toString(); // we skeep the real result ...
     }
+    def error = ""
+    def i=0
 }%
-
+<div class="row">
 #{list items:_fields ?: currentType.fields*.name, as:'fieldName'}
 
     %{
         am = ''
     }%
 
-    %{ def field = currentType.getField(fieldName) }%
+    %{ def field = currentType.getField(fieldName) 
+    }%
     
+    %{
+    
+    if(i!=0 && i%2==0){
+    }%
+    </div><div class="row">
+    %{
+    }
+    
+    }%
+    
+ %{if(field.type!='hidden'){}%
+<div class="col-md-6">
+%{
+i++
+}}%
 
 <div class="form-group crud_${field.type}">
 
@@ -63,12 +81,10 @@
 
         #{if field.type == 'number'}
             #{crud.numberField name:field.name, value:(currentObject ? currentObject[field.name] : null) /}
-            %{ am = 'crud.help.numeric' }%
         #{/if}
 
         #{if field.type == 'date'}
             #{crud.dateField name:field.name, value:(currentObject ? currentObject[field.name] : null) /}
-            %{ am = messages.get('crud.help.dateformat',play.libs.I18N.getDateFormat()) }%
         #{/if}
 
         #{if field.type == 'relation'}
@@ -87,16 +103,57 @@
             #{crud.hiddenField name:field.name, value:(currentObject ? currentObject[field.name] : null) /}
         #{/if}
 
-    
+<script type="text/javascript">
+        &{am}
+            %{ play.data.validation.Validation.getValidators(currentType.entityClass, fieldName, 'object').each() { }%
+                %{
+                    switch (it.annotation.annotationType().name.substring(21)) {
+                        case "Required":
+                            out.println("\$('#object_"+fieldName+"').attr('required','true')")
+                            break;
+                        case "MinSize":
+                            out.println(messages.get('crud.help.minlength', it.annotation.value()))
+                            break;    
+                        case "MaxSize":
+                            out.println(messages.get('crud.help.maxlength', it.annotation.value()))
+                            break;
+                        case "Range":
+                            out.println(messages.get('crud.help.range', it.annotation.min(), it.annotation.max()))
+                            break;
+                        case "Min":
+                            out.println(messages.get('crud.help.min', it.annotation.value()))
+                            break;
+                        case "Email":
+                            out.println(messages.get('crud.help.email'))
+                            break;
+                        case "Equals":
+                            out.println(messages.get('crud.help.equals', it.params.equalsTo))
+                            break;
+                        case "Future":
+                            if(it.params.reference) {
+                                out.println(messages.get('crud.help.after', it.params.reference))
+                            } else {
+                                out.println(messages.get('crud.help.future'))
+                            }
+                            break;
+                        case "Past":
+                            if(it.params.reference) {
+                                out.println(messages.get('crud.help.before', it.params.reference))
+                            } else {
+                                out.println(messages.get('crud.help.past'))
+                            }
+                            break;
+                    }
+                }%
+            %{ } }%
+</script>
+
 
     %{ } }%
 
 </div>
-
+%{if(field.type!='hidden'){}%
+</div>
+%{}}%
 #{/list}
-
-<script type="text/javascript">
-<!--
-	$(".form-group").find("span.has-error").parent().addClass("has-error");
-//-->
-</script>
+</div>

@@ -8,10 +8,9 @@
 %{
     }
 }%
-
-<table class="data-table table table-bordered table-striped dataTable"
-								style="margin-bottom: 0;" id="DataTables_Table_0"
-								aria-describedby="DataTables_Table_0_info">
+<div class="table-info">
+<table class="table table-bordered table-striped"
+								style="margin-bottom: 0;" >
     <thead>
         <tr>
         %{ if(_fields) { }%
@@ -91,16 +90,12 @@
 
 <script type="text/javascript">
 <!--
-$('table').dataTable({
-	"sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-	"sPaginationType": "bootstrap",
-    "oLanguage": {
-        "sLengthMenu": "&{'datatables.display'} _MENU_ &{'datatables.eachpage'}",
-        "sZeroRecords": "&{'datatables.zero'}",
-        "sInfo": "&{'datatables.showing'} _START_ &{'datatables.to'} _END_ / &{'datatables.stat'} _TOTAL_&{'datatables.total'}",
-        "sInfoEmpty": "0 &{'datatables.total'}",
-        "sInfoFiltered": "(&{'datatables.filter'} _MAX_&{'datatables.total'})"
-    }
+$('table').dataTable();
+$('table .dataTables_filter input').attr('placeholder', 'Search...');
+
+$('.dataTables_length>label>.form-control').select2().change(function(){
+    $(this).valid();
 });
 //-->
 </script>
+</div>

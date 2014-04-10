@@ -1,0 +1,189 @@
+#{extends 'main.html' /}
+#{set title: profile.name /}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h1 class="pull-left">
+                <i class="icon-ok"></i> <span>&{'crud.list.title', type.modelName} #{if profile.is_audit==1}<label class="label label-success">&{'audit_yes'}#{/if}#{elseif profile.is_audit==2}<label class="label label-danger">&{'audit_no'}</label>#{/elseif}#{else}<label class="label label-default">&{'audit_standby'}</label>#{/else}</span>
+            </h1>
+            <div class="pull-right">
+                #{deadbolt.restrict roles:[['superadmin'],['admin'],['system'],['operator']] }
+                <a class="btn box-collapse btn-xs btn-success" data-toggle="modal" href="#modal-audit">&{'audit'}</a>
+                #{/deadbolt.restrict}
+                #{deadbolt.restrict roles:[['superadmin'],['system']] }
+                <a class="btn box-collapse btn-xs btn-warning" href="@{show(profile.id)}">&{'edit'}</a>
+                #{/deadbolt.restrict}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-audit" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form" id="auditForm" name="auditForm" style="margin-bottom: 0;" method="post" action="#" accept-charset="UTF-8">
+                <div class="modal-header">
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+                    <h4 class="modal-title" id="myModalLabel">&{'Audit'}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label class="radio radio-inline">
+                                <input type="radio" id="is_audit" name="is_audit" value="1" class="px" required>
+                                <span class="lbl">&{'audit_yes'}</span>
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" id="is_audit" name="is_audit" value="0" class="px" required>
+                                <span class="lbl">&{'audit_standby'}</span>
+                            </label>
+                            <label class="radio radio-inline">
+                                <input type="radio" id="is_audit" name="is_audit" value="2" class="px" required>
+                                <span class="lbl">&{'audit_no'}</span>
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="message">&{'audit_message'}</label>
+                        <textarea class="form-control" id="message" name="message" placeholder="" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">&{'close'}</button>
+                    <button class="btn btn-primary" type="submit">&{'save'}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row form form-horizontal ">
+	<div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissable" id="alertText">
+                    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">×
+                    </a>
+                    <i class="icon-info-sign"></i>
+                    &{'audit_yes'}
+                </div>
+            </div>
+        </div>
+		<div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td><b>&{'company'}</b></td>
+                            <td>${profile.name}</td>
+                            <td><b>&{'material'}</b></td>
+                            <td>
+                            %{
+                                def index=0
+                                def materials = new Object[profile.materials.size()]
+                                }%
+                            #{list items: profile.materials, as:'material'}
+                            %{
+                                materials[index]=material.name
+                                index++
+                                }%
+                            #{/list}
+                            ${materials.join(",")}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'registration_number'}</b></td>
+                            <td>${profile.registration_number}</td>
+                            <td><b>&{'factory_name'}</b></td>
+                            <td>${profile.factory_name}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'registration_assets'}</b></td>
+                            <td>${profile.registration_assets}</td>
+                            <td><b>&{'factory_address'}</b></td>
+                            <td>${profile.factory_address}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'registration_address'}</b></td>
+                            <td>${profile.registration_address}</td>
+                            <td><b>&{'first_supply'}</b></td>
+                            <td>${profile.first_supply}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'bank_name'}</b></td>
+                            <td>${profile.bank_name}</td>
+                            <td><b>&{'business_model'}</b></td>
+                            <td>${profile.business_model}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'account_name'}</b></td>
+                            <td>${profile.account_name}</td>
+                            <td><b>&{'contact_name'}</b></td>
+                            <td>${profile.contact_name}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'tfn'}</b></td>
+                            <td>${profile.tfn}</td>
+                            <td><b>&{'contact_job'}</b></td>
+                            <td>${profile.contact_job}</td>
+                        </tr>
+                        <tr>
+                            <td><b>&{'legal_person'}</b></td>
+                            <td>${profile.legal_person}</td>
+                            <td><b>&{'contact_phone'}</b></td>
+                            <td>${profile.contact_phone}</td>
+                        </tr>
+                        <tr>
+                            <td><b></b></td>
+                            <td></td>
+                            <td><b>&{'contact_email'}</b></td>
+                            <td>${profile.contact_email}</td>
+                        </tr><tr>
+                            <td><b></b></td>
+                            <td></td>
+                            <td><b>&{'sales_name'}</b></td>
+                            <td>${profile.sales_name}</td>
+                        </tr>
+                        <tr>
+                            <td><b></b></td>
+                            <td></td>
+                            <td><b>&{'sales_job'}</b></td>
+                            <td>${profile.sales_job}</td>
+                        </tr>
+                        <tr>
+                            <td><b></b></td>
+                            <td></td>
+                            <td><b>&{'sales_phone'}</b></td>
+                            <td>${profile.sales_phone}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+			
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $('#alertText').toggle();
+    $("#auditForm").validate({
+        submitHandler: function(form) {
+            $("#auditForm").ajaxSubmit({
+                type:"post",
+                url:"@{audit(profile.id)}",
+                //beforeSubmit: showRequest,
+                success: function(data){
+                    $('#modal-audit').modal('hide');
+                    $('#alertText').toggle();
+                }
+            });
+        }
+    });
+</script>
+
+
+    
+	    
+	  

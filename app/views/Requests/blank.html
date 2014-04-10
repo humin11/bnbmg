@@ -1,0 +1,313 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.blank.title', type.modelName) /}
+
+<div id="crudBlank" class="${type.name}">
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
+			</h1>
+            <div class="pull-right">
+                <button class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</button>
+            </div>
+		</div>
+	</div>
+</div>
+
+    <!-- Modal -->
+    <div id="specModal" class="modal fade" tabindex="-1" role="dialog" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">添加采购规格</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form form-horizontal validate-form" method="post" action="@{Specs.create()}" id="specForm"  enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'specification'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_specification" name="object.specification" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'material'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <select class='form-control' placeholder='请选择物资类型' id="object_material" data-rule-required="true" name="object.material.id">
+                                #{list items:materials, as:'material'}
+                                    <option value='${material.id}'>${material.name}</option>
+                                #{/list}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'thickness'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" id="object_thickness" name="object.thickness" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'width'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" id="object_width" name="object.width" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'weight'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" id="object_weight" name="object.weight" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'others'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" id="object_others" name="object.others" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'amount'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_amount" name="object.amount" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'unit'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_unit" name="object.unit" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'arrival_time'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_arrival_time" name="object.arrival_time" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'description'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_description" name="object.description" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'detail_spec'}</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_detail_spec" name="object.detail_spec" type="file" value="" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div> <!-- / .modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                    <button type="button" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div> <!-- /.modal -->
+    <!-- / Modal -->
+
+
+    <div class="objectForm">
+		#{form action:@create(), enctype:'multipart/form-data', class:'form form-horizontal validate-form', id:'requestForm'}
+            %{
+                def username = session.get("username")
+                user = models.User.getByUserName(username);
+            }%
+
+            <input type="hidden" id="object_user" name="object.user.id" value="${user.id}"/>
+            <input type="hidden" id="object.profiles.id" name="object.profiles.id" value="" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <label for="object_name">&{'name'}</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <input class="form-control" data-rule-required="true" id="object_name" name="object.name" type="text" value="${object.name}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <label for="object_style">&{'style'}</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <select class="form-control" name="object.style" id="object_style">
+                                <option value="1">公有</option>
+                                <option value="2">私有</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <label for="object_description">&{'description'}</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <textarea class="form-control" id="object_description" data-rule-required="true" name="object.description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" id="styleGroup" style="display: none">
+                        <div class="control-label col-md-3">
+                            <label for="object_profiles">请选择供货商</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <select class='form-control' multiple placeholder='请选择供货商' id="object_profiles" name="object.profiles.id">
+                                #{list items:profiles, as:'profile'}
+                                %{
+                                    def index=0
+                                    def materials = new Object[profile.materials.size()]
+                                    }%
+                                    #{list items: profile.materials, as:'material'}
+                                    %{
+                                        materials[index]=material.name
+                                        index++
+                                        }%
+                                    #{/list}
+                                    <option value='${profile.id}'>${profile.name} - ${materials.join(",")}</option>
+                                #{/list}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row hidden">
+                <div class="form-group" id="styleGroup" style="display: none">
+                    <div class="control-label col-md-3">
+                        <label for="object_specifications">规格型号</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <select class='form-control' multiple id="object_specifications" name="object.specifications.id">
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            #{crud.form}
+
+
+            #{/crud.form}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-primary">
+                        <table class="table table-bordered" id="specTable">
+                            <thead>
+                                <th>物资类型</th>
+                                <th>型号</th>
+                                <th>厚度</th>
+                                <th>宽度</th>
+                                <th>克重</th>
+                                <th>其他</th>
+                                <th>采购量</th>
+                                <th>单位</th>
+                                <th>到货时间</th>
+                                <th>需求工厂明细</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+		<div class="form-actions" style="margin-bottom: 0">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary btn-sm" name="_save"><i class="fa fa-save"></i>&nbsp;&nbsp;&{'crud.save', type.modelName}</button>
+                    <button type="submit" class="btn btn-primary btn-sm" name="_saveAndContinue"><i class="fa fa-edit"></i>&nbsp;&nbsp;&{'crud.saveAndContinue', type.modelName}</button>
+                    <button type="submit" class="btn btn-primary btn-sm" name="_saveAndAddAnother"><i class="fa fa-plus"></i>&nbsp;&nbsp;&{'crud.saveAndAddAnother', type.modelName}</button>
+				</div>
+			</div>
+		</div>
+    #{/form}
+
+
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $("#object_name").attr("required","true");
+    $("#object_name").attr("required","true");
+    $('#object_style').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if(valueSelected==2){
+            $("#styleGroup").show();
+        }else{
+
+            $("#styleGroup").hide();
+        }
+    });
+
+    var table = $("#specTable").dataTable();
+    $('.dataTables_length>label>.form-control').select2().change(function(){
+        $(this).valid();
+    });
+
+    $("#specSave").live('click',function(){
+        $("#specForm").validate();
+        $("#specForm").ajaxSubmit({
+            dataType:'json',
+            success: function(data){
+                $("#specForm")[0].reset();
+                $("#specModal").modal('hide');
+                $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
+                table.fnAddData([data.material.name, data.specification, data.thickness, data.width, data.weight, data.others, data.amount, data.unit, data.arrival_time,  '','<a href="#" >x</a> ']);
+            }
+        });
+
+    });
+
+    $('#object_profiles').select2({ placeholder: '请选择供应商...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_material').select2({ placeholder: '请选择物资类型...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_image').pixelFileInput({ placeholder: 'No file selected...' });
+    $('#object_detail_spec').pixelFileInput({ placeholder: 'No file selected...' });
+    $('#object_arrival_time').datetimepicker({ format:'Y-m-d h:i' });
+
+</script>

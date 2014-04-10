@@ -5,9 +5,8 @@
 	<classpathentry kind="src" path="crud"/>
 	<classpathentry kind="src" path="deadbolt-1.5.4"/>
 	<classpathentry kind="src" path="secure"/>
-	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/play-1.2.5.3.jar" sourcepath="/Users/Humin/MyApplications/play-1.2.5/framework/src" />
+	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/play-1.2.5.3.jar" sourcepath="/Users/Humin/MyApplications/play-1.2.5/framework/src"/>
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/modules/deadbolt-1.5.4/lib/play-deadbolt.jar"/>
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/lib/activation-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/lib/antlr-2.7.7.jar"/>
@@ -76,6 +75,7 @@
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/lib/xmlpull-1.1.3.1.jar"/>
 	<classpathentry kind="lib" path="/Users/Humin/MyApplications/play-1.2.5/framework/lib/xstream-1.4.2.jar"/>
-	
+	<classpathentry kind="lib" path="/test/lib/httpclient-4.3.1.jar"/>
+	<classpathentry kind="lib" path="/yitai.sms/lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="output" path="eclipse/classes"/>
 </classpath>

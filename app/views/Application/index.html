@@ -1,3 +1,215 @@
 #{extends 'main.html' /}
-#{set title:'Home' /}
+#{set title: session.get("username") /}
 
+#{deadbolt.restrict roles:[['superadmin'],['user']] }
+*{<div class="row">}*
+    *{<div class="col-md-12">}*
+        *{<div class="alert alert-info alert-dismissable">}*
+            *{<a class="close" data-dismiss="alert" href="#">×}*
+            *{</a>}*
+
+            *{<i class="icon-info-sign"></i>}*
+            *{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi nunc, rutrum quis tincidunt ac}*
+        *{</div>}*
+    *{</div>}*
+*{</div>}*
+#{/deadbolt.restrict}
+
+#{deadbolt.restrict roles:[['superadmin'],['admin'],['system']] }
+<div class="row">
+    <div class="col-sm-12">
+        <div class="stat-panel">
+            <!-- Success background, bordered, without top and bottom borders, without left border, without padding, vertically and horizontally centered text, large text -->
+            <a href="#" class="stat-cell col-xs-5 bg-success bordered no-border-vr no-border-l no-padding valign-middle text-center text-lg">
+                <i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>${new java.util.Date().getMonth()+1}-${new java.util.Date().getDate()}</strong>
+            </a> <!-- /.stat-cell -->
+            <!-- Without padding, extra small text -->
+            <div class="stat-cell col-xs-7 no-padding valign-middle">
+                <!-- Add parent div.stat-rows if you want build nested rows -->
+                <div class="stat-rows">
+                    <div class="stat-row">
+                        <!-- Success background, small padding, vertically aligned text -->
+                        <a href="@{Profiles.list()}" class="stat-cell bg-success padding-sm valign-middle">
+                            ${profiles.size()}&nbsp;待审核供应商
+                            <i class="fa fa-users pull-right"></i>
+                        </a>
+                    </div>
+                    <div class="stat-row">
+                        <!-- Success darken background, small padding, vertically aligned text -->
+                        <a href="@{Requests.list()}" class="stat-cell bg-success darken padding-sm valign-middle">
+                            ${requests.size()}&nbsp;正在招标的项目
+                            <i class="fa fa-bug pull-right"></i>
+                        </a>
+                    </div>
+
+                </div> <!-- /.stat-rows -->
+            </div> <!-- /.stat-cell -->
+        </div>
+
+    </div>
+
+</div>
+#{/deadbolt.restrict}
+
+#{deadbolt.restrict roles:[['superadmin'],['user']]}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel" style="margin-bottom:0;">
+            <div class="panel-heading">
+                <div class="panel-title">我参与的投标</div>
+            </div>
+            <div class="panel-body">
+                <div class="table-warning">
+                    <table class="table table-bordered" style="margin-bottom:0;" id="myPay">
+                        <thead>
+                        <tr>
+                            <th>
+                            &{'name'}
+                            </th>
+                            <th>物资类型</th>
+                            <th>型号</th>
+                            <th>厚度</th>
+                            <th>宽度</th>
+                            <th>克重</th>
+                            <th>其他</th>
+                            <th>采购量</th>
+                            <th>单位</th>
+                            <th>到货时间</th>
+                            <th>需求工厂明细</th>
+                            <th>报价</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            #{list items: toubiaos, as:'toubiao'}
+
+
+                            %{
+                                for(int i=0; i<toubiao.baojias.size(); i++){
+                                def bj = toubiao.baojias.get(i);
+                                }%
+                            <tr>
+                                <td>
+                                ${toubiao.profile.name} - ${toubiao.payStyle} - ${toubiao.invoice} - ${toubiao.comments}
+                                    #{if toubiao.status=="1"}
+                                        <label class="label label-success">已中标</label>
+                                    #{/if}
+                                    #{elseif toubiao.status=="2"}
+                                        <label class="label label-danger">未中标</label>
+                                    #{/elseif}
+                                    #{else}
+                                        <label class="label label-info">评标进行中</label>
+                                    #{/else}
+                                </td>
+                                <td>${bj.specification.material.name}</td>
+                                <td>${bj.specification.specification}</td>
+                                <td>${bj.specification.thickness}</td>
+                                <td>${bj.specification.width}</td>
+                                <td>${bj.specification.weight}</td>
+                                <td>${bj.specification.others}</td>
+                                <td>${bj.specification.amount}</td>
+                                <td>${bj.specification.unit}</td>
+                                <td>${bj.specification.arrival_time}</td>
+                                <td></td>
+                                <td>
+                                ${bj.price}#{if bj.secondPrice!=null}/${bj.secondPrice} #{/if}
+                                </td>
+
+                            </tr>
+                            %{}}%
+                            #{/list}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+#{/deadbolt.restrict}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel" style="margin-bottom:0;">
+            <div class="panel-heading">
+                <div class="panel-title">招标信息</div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover" style="margin-bottom:0;">
+                    <thead>
+                    <tr>
+                        <th>
+                        &{'name'}
+                        </th>
+                        <th>
+                        &{'status'}
+                        </th>
+                    #{deadbolt.restrict roles:[['superadmin'],['user']] }
+                        <th>&{'operator'}</th>
+                    #{/deadbolt.restrict}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    #{list items: allRequests, as:'request'}
+                    <tr>
+                        <td>${request.name}</td>
+                        <td>
+                            #{if request.status==0}
+                                <label class="label label-info">招标中</label>
+                            #{/if}
+                            #{elseif request.status==2}
+                                <label class="label label-warning">再次竞价</label>
+                            #{/elseif}
+                            #{else}
+                                <label class="label label-success">招标结束</label>
+                            #{/else}
+                        </td>
+                        #{deadbolt.restrict roles:[['superadmin'],['user']] }
+                            <td>
+                            %{
+                                def user = models.User.getByUserName(session.get('username'));
+                                def profile = models.Profile.find("user.id=?",user.id).first();
+                                def toubiao = models.Toubiao.find("request.id=? and user.name=?", request.id, session.get('username')).first()
+                                if(toubiao==null){
+                                }%
+                                #{if profile.is_audit}
+                                    <a class="btn btn-info btn-xs" href="@{Vender.baojia(request.id)}">我要报价</a>
+                                #{/if}
+                                #{else}
+                                    <a class="btn btn-link btn-xs" href="#">请等待管理员审核</a>
+                                #{/else}
+
+                            %{ } else { }%
+                                #{if toubiao.again}
+                                    <a class="btn btn-info btn-xs" href="@{Vender.baojia2(request.id, toubiao.id)}">再次报价</a>
+                                #{/if}
+                                #{else}
+                                    <a class="btn btn-success btn-xs" href="#">已投标</a>
+                                #{/else}
+                            %{ } }%
+                            </td>
+                        #{/deadbolt.restrict}
+                    </tr>
+                    #{/list}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function toubiao(id,amount){
+        $("#request").val(id);
+        $("#myModal").modal();
+    }
+
+    $("#price").change(function(){
+        $("total").html($("#price").val() * $("#amount").val());
+        $("#totalPrice").val($("#price").val() * $("#amount").val());
+    });
+
+    $("#myPay").dataTable().rowGrouping();
+</script>

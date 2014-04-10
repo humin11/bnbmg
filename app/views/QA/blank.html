@@ -1,0 +1,102 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.blank.title', type.modelName) /}
+
+<div id="crudBlank" class="${type.name}">
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
+			</h1>
+
+		</div>
+	</div>
+</div>
+    <div class="objectForm">
+		#{form action:@upload(), enctype:'multipart/form-data', class:'form form-horizontal validate-form',id:'regForm'}
+        <div class="form-group">
+            <div class="form-group dark hide">
+                <div class="col-md-12 controls">
+                    <select class="form-control" data-rule-required="true" id="files" name="files" multiple>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    #{/form}
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="my-dropzone" class="dropzone-box">
+            <div class="dz-default dz-message">
+                <i class="fa fa-cloud-upload"></i>
+                请拖拽文件到此<br><span class="dz-text-small">或点击选择文件</span>
+            </div>
+            <form enctype="multipart/form-data" method="post" action="@{Vender.upload()}">
+                <div class="fallback">
+                    <input name="file" type="file" multiple="" />
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-sm-7 col-sm-offset-5">
+                    <button class="btn btn-success" type="button" id="submit"><i class="icon-save"></i> &{'save'}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#my-dropzone').dropzone({
+        url:"@{Vender.upload()}",
+        maxFilesize: 20,
+        paramName: 'files',
+        addRemoveLinks: true,
+        acceptedFiles:"image/*,application/pdf,.psd",
+        init: function() {
+            this.on("success", function(file, response){
+                file.serverId=response;
+                $("#files").append('<option value="'+file.serverId+'" selected="selected">'+file.name+'</option>');
+            });
+            this.on("removedfile", function(file) {
+                if (!file.serverId) { return; }
+                $.post("@{Vender.remove()}?id=" + file.serverId);
+                $("select#files option").filter("[value='"+file.serverId+"']").remove();
+            });
+        },
+        previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size">File size: <span data-dz-size></span></div><div class="dz-thumbnail-wrapper"><div class="dz-thumbnail"><img data-dz-thumbnail><span class="dz-nopreview">No preview</span><div class="dz-success-mark"><i class="fa fa-check-circle-o"></i></div><div class="dz-error-mark"><i class="fa fa-times-circle-o"></i></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div></div></div><div class="progress progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div></div>',
+
+        resize: function(file) {
+            var info = { srcX: 0, srcY: 0, srcWidth: file.width, srcHeight: file.height },
+                    srcRatio = file.width / file.height;
+            if (file.height > this.options.thumbnailHeight || file.width > this.options.thumbnailWidth) {
+                info.trgHeight = this.options.thumbnailHeight;
+                info.trgWidth = info.trgHeight * srcRatio;
+                if (info.trgWidth > this.options.thumbnailWidth) {
+                    info.trgWidth = this.options.thumbnailWidth;
+                    info.trgHeight = info.trgWidth / srcRatio;
+                }
+            } else {
+                info.trgHeight = file.height;
+                info.trgWidth = file.width;
+            }
+            return info;
+        }
+    });
+
+    $( "#submit" ).live( "click", function() {
+        $("#regForm").validate();
+        $("#regForm").submit();
+    });
+
+</script>

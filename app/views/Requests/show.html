@@ -1,0 +1,88 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
+			</h1>
+
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td><b>&{'name'}</b></td>
+                    <td>${object.name}</td>
+                    <td><b>&{'style'}</b></td>
+                    <td>
+                        ${object.style}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>&{'description'}</b></td>
+                    <td>${object.description}</td>
+                    <td><b></b></td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>&{'starttime'}</b></td>
+                    <td>${object.starttime}</td>
+                    <td><b>&{'stoptime'}</b></td>
+                    <td>
+                        ${object.stoptime}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>&{'files'}</b></td>
+                    <td colspan="3"><a class="currentAttachment" href="@{attachment(object.id, 'image')}" target="_blank">${object.image.getFile().getName()}</a></td>
+
+                </tr>
+            </tbody>
+        </table>
+	</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-primary">
+            <table class="table table-bordered" id="specTable">
+                <thead>
+                <th>物资类型</th>
+                <th>型号</th>
+                <th>厚度</th>
+                <th>宽度</th>
+                <th>克重</th>
+                <th>其他</th>
+                <th>采购量</th>
+                <th>单位</th>
+                <th>到货时间</th>
+                <th>需求工厂明细</th>
+
+                </thead>
+                <tbody>
+                    #{list items: object.specifications, as:'spec'}
+                    <tr>
+                        <td>${spec.material.name}</td>
+                        <td>${spec.specification}</td>
+                        <td>${spec.thickness}</td>
+                        <td>${spec.width}</td>
+                        <td>${spec.weight}</td>
+                        <td>${spec.others}</td>
+                        <td>${spec.amount}</td>
+                        <td>${spec.unit}</td>
+                        <td>${spec.arrival_time}</td>
+                        <td><a class="currentAttachment" href="@{Specs.attachment(spec.id, 'detail_spec')}" target="_blank">${spec.detail_spec.getFile().getName()}</a></td>
+
+                    </tr>
+                    #{/list}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

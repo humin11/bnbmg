@@ -9,7 +9,7 @@ import play.mvc.With;
 
 @With(Deadbolt.class)
 @CRUD.For(User.class)
-@Restrictions({@Restrict("superadmin"), @Restrict("admin")})
+@Restrictions({@Restrict("superadmin"), @Restrict("system")})
 public class Users extends CRUD {
 	
 }

@@ -15,6 +15,10 @@ public class InitData extends Job
         {
             new ApplicationRole("superadmin").save();
         }
+        if (ApplicationRole.getByName("system") == null)
+        {
+            new ApplicationRole("system").save();
+        }
         if (ApplicationRole.getByName("admin") == null)
         {
             new ApplicationRole("admin").save();
@@ -26,10 +30,6 @@ public class InitData extends Job
         if (ApplicationRole.getByName("user") == null)
         {
             new ApplicationRole("user").save();
-        }
-        if (ApplicationRole.getByName("system") == null)
-        {
-            new ApplicationRole("system").save();
         }
 
         if (User.getByUserName("system") == null)

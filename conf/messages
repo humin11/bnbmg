@@ -5,6 +5,40 @@ application.name=北新建材采购比价平台
 
 new=新增
 save=保存
+close=关闭
+edit=编辑
+
+dashboard=首页
+
+status=状态
+operator=操作
+
+price=价格
+totalPrice=总价
+
+Audits=反馈意见
+Audit=审核意见
+audit=审核
+audit_yes=审核通过
+audit_standby=审核待定
+audit_no=未审核通过
+audit_number=审核次数
+
+spec.new=添加采购规格
+
+audit_user=审核人员
+audit_date=审核时间
+audit_message=审核意见
+audit_state=审核状态
+
+image=文件名
+Files=资质文件
+QA=资质文件
+
+model.ziying=自营
+model.jingxiao=经销
+model.guakao=挂靠
+model.qita=其他
 
 tender=招标信息
 profile=基本信息
@@ -12,6 +46,7 @@ settings=设置
 login=登录
 logout=登出
 supplier=供应商管理
+supplier.register=注册成为供应商
 supplier.info=供应商信息
 supplier.comment=反馈意见
 supplier.qualification=供应商资质
@@ -32,10 +67,12 @@ User=用户管理
 Users=用户管理
 
 Request=采购需求
+Requests=采购需求
 
 Profile=供应商管理
 Profiles=供应商管理
 name=名称
+company=公司名称
 materials=物资类型
 material=物资类型
 is_audit=是否审核
@@ -49,7 +86,7 @@ weight=重量
 others=其他信息
 amount=数量
 unit=单位
-arrival_time=到期时间
+arrival_time=到货时间
 description=描述
 files=相关文件
 
@@ -67,9 +104,12 @@ business_model=经营模式
 contact_name=业务联系人员姓名
 contact_job=业务联系人职务
 contact_phone=业务联系人电话
+contact_email=业务联系人邮件
 sales_name=销售决策人姓名
 sales_job=销售决策人职务
 sales_phone=销售决策人电话
+
+detail_spec=需求详细表单
 
 hatech.about=关于同创
 

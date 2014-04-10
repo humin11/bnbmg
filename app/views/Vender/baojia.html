@@ -1,0 +1,89 @@
+#{extends 'main.html'/}
+#{set title:"我要报价" /}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h1 class="pull-left">
+                <i class="icon-ok"></i> <span>${req.name} - 报价</span>
+            </h1>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form class="form form-horizontal" method="post" action="@{Vender.toubiao()}" id="baojiaForm">
+            <input type="hidden" id="request" name="request" value="${req.id}">
+            <div class="form-group dark">
+                <label class="col-md-3 control-label" for="inputPassword4">支付方式</label>
+                <div class="col-md-9">
+                    <input class="form-control" id="payStyle" name="payStyle" data-rule-required="true" placeholder="" type="text" value="">
+                </div>
+            </div>
+            <div class="form-group dark">
+                <label class="col-md-3 control-label" for="inputPassword4">开票方式</label>
+                <div class="col-md-9">
+                    <input class="form-control" id="invoice" name="invoice" data-rule-required="true" placeholder="" type="text" value="">
+                </div>
+            </div>
+            <div class="form-group dark">
+                <label class="col-md-3 control-label" for="inputPassword4">备注</label>
+                <div class="col-md-9">
+                    <textarea class="form-control" id="comments" name="comments"  data-rule-required="true">
+
+                    </textarea>
+                </div>
+            </div>
+            <div class="table-success">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>物资类型</th>
+                        <th>型号</th>
+                        <th>厚度</th>
+                        <th>宽度</th>
+                        <th>克重</th>
+                        <th>其他</th>
+                        <th>采购量</th>
+                        <th>单位</th>
+                        <th>到货时间</th>
+                        <th>需求工厂明细</th>
+                        <th>报价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #{list items: req.specifications, as:'spec'}
+                            <tr>
+                                <td>${spec.material.name}</td>
+                                <td>${spec.specification}</td>
+                                <td>${spec.thickness}</td>
+                                <td>${spec.width}</td>
+                                <td>${spec.weight}</td>
+                                <td>${spec.others}</td>
+                                <td>${spec.amount}</td>
+                                <td>${spec.unit}</td>
+                                <td>${spec.arrival_time}</td>
+                                <td><a href="@{Specs.attachment(spec.id,'detail_spec')}" target="_blank">文件</a></td>
+                                <td>
+                                    <input type="text" name="price${spec.id}" id="price${spec.id}" data-rule-number="true" />
+                                </td>
+                            </tr>
+                        #{/list}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well">
+                        <button class="btn btn-sm btn-info" type="submit"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+
+
+    $("#baojiaForm").validate();
+</script>

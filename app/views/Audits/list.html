@@ -1,0 +1,37 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.list.title', type.name) /}
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.list.title', type.modelName}</span>
+			</h1>
+			<div class="pull-right">
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="box">
+			<div class="box-content box-padding">
+				#{crud.table fields:['audit_user', 'audit_date', 'audit_state','audit_message']}
+				    #{crud.custom 'audit_user'}
+                        ${object.user.name}
+                    #{/crud.custom}
+				    #{crud.custom 'audit_date'}
+                        ${object.create_at}
+                    #{/crud.custom}
+				    #{crud.custom 'audit_state'}
+                        ${object.is_audit}
+                    #{/crud.custom}
+				    #{crud.custom 'audit_message'}
+                        ${object.message}
+                    #{/crud.custom}
+                #{/crud.table}
+			</div>
+		</div>
+	</div>
+</div>

@@ -23,6 +23,7 @@ import play.db.jpa.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import controllers.CRUD.Exclude;
 
@@ -48,6 +49,10 @@ public class User extends Model implements RoleHolder
     @Required
     @ManyToOne
     public ApplicationRole role;
+
+    @Exclude
+    @OneToOne
+    public Profile profile;
 
     public User(String userName,
                 String password,

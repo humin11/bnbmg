@@ -8,17 +8,32 @@
 				<i class="icon-ok"></i> <span>&{'crud.list.title', type.modelName}</span>
 			</h1>
 			<div class="pull-right">
-				<a class="btn box-collapse btn-xs btn-warning" href="@{blank()}">&{'new'}</a>
+                #{deadbolt.restrict roles:[['superadmin'],['system']] }
+				    <a class="btn box-collapse btn-xs btn-warning" href="@{blank()}">&{'new'}</a>
+                    <a class="btn btn-xs btn-info" href="@{Vender.toImp()}"><i class="fa fa-upload"></i>&nbsp;&{'supplier.import'}</a>
+                #{/deadbolt.restrict}
 			</div>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
-		<div class="box">
-			<div class="box-content box-padding">
-				#{crud.table fields:['name','materials','is_audit']/}
-			</div>
+        #{crud.table fields:['username','name','materials','is_audit']}
+           #{crud.custom 'username'}
+               <a href="@{view(object.id)}">${object.user.name}</a>
+           #{/crud.custom}
+            #{crud.custom 'is_audit'}
+                #{if object.is_audit==1}
+                    <label class="label label-success">&{'audit_yes'}</label>
+                #{/if}
+                #{elseif object.is_audit==2}
+                    <label class="label label-danger">&{'audit_no'}</label>
+                #{/elseif}
+                #{else }
+                    <label class="label label-default">&{'audit_standby'}</label>
+                #{/else}
+            #{/crud.custom}
+        #{/crud.table}
 		</div>
 	</div>
 </div>

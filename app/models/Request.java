@@ -1,48 +1,73 @@
 package models;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import controllers.CRUD;
+import play.data.binding.As;
+import play.data.validation.Required;
+import play.db.jpa.Blob;
 import play.db.jpa.Model;
 
 @Entity
 public class Request extends Model {
 
+    @CRUD.Exclude
+	@Required
 	public String name;
 	
+	@Required
 	@ManyToOne
-	public Material material;
-	
+    @CRUD.Exclude
+	public User user;
+
+    //Zhaobiao or Yaobiao
+    @CRUD.Exclude
+	@Required
 	public String style;
+
+    @CRUD.Exclude
+    @ManyToMany
+    public List<Profile> profiles = new ArrayList<Profile>();
 	
-	public Date starttime;
+	@Required
+    public Date starttime;
 	
-	public Date stoptime;
-	
-	public String specification;
-	
-	public double thickness;
-	
-	public double width;
-	
-	public double weight;
-	
-	public double others;
-	
-	public double amount;
-	
-	public String unit;
-	
-	public Date arrival_time;
-	
-	@Lob
-	public String description;
-	
-	@ManyToMany
-	public List<Files> files;
+	@Required
+    public Date stoptime;
+
+//    @CRUD.Exclude
+//	@ManyToMany
+//	public List<Files> files = new ArrayList<Files>();
+
+    // 0 - Toubiaoing
+    // 1 - Already Toubiao
+    // 2 - Toubiao Again
+    @CRUD.Exclude
+    public int status = 0;
+
+    @CRUD.Exclude
+    public Boolean is_finished=false;
+
+    @CRUD.Exclude
+    @ManyToOne
+    public Profile zhongbiao;
+
+    @CRUD.Exclude
+    public int zbCount;
+
+    @OneToMany
+    @CRUD.Exclude
+    public List<Specification> specifications = new ArrayList<Specification>();
+
+    @Lob
+    @Required
+    @CRUD.Exclude
+    public String description;
+
+    public Blob image;
+
 }

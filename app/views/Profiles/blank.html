@@ -8,36 +8,336 @@
 			<h1 class="pull-left">
 				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
 			</h1>
-			<div class="pull-right">
-				<ul class="breadcrumb">
-					<li><a href="/"> <i class="icon-dashboard"></i></a></li>
-					<li class="separator"><i class="icon-angle-right"></i></li>
-					<li><a href="@{list()}">&{'crud.list.title', type.name}</a></li>
-					<li class="separator"><i class="icon-angle-right"></i></li>
-					<li class="active">&{'new'}</li>
-				</ul>
-			</div>
+
 		</div>
 	</div>
 </div>
     <div class="objectForm">
-		#{form action:@create(), enctype:'multipart/form-data', class:'form form-horizontal validate-form'} 
-			
-		#{crud.form /}
-		<div class="form-actions" style="margin-bottom: 0">
-			<div class="row">
-				<div class="col-sm-9 col-sm-offset-3">
-					<input type="submit" class="btn btn-primary btn-sm" name="_save"
-						value="&{'crud.save', type.modelName}" /> <input type="submit"
-						class="btn btn-primary btn-sm" name="_saveAndContinue"
-						value="&{'crud.saveAndContinue', type.modelName}" /> <input
-						type="submit" class="btn btn-primary btn-sm"
-						name="_saveAndAddAnother"
-						value="&{'crud.saveAndAddAnother', type.modelName}" />
-				</div>
-			</div>
-		</div>
-    #{/form}
+    <form class="form form-horizontal validate-form" action="@{vender.save()}"
+          style="margin-bottom: 0;" novalidate="novalidate" method="post" id="regForm">
+    <div class="row">
+    <div class="col-md-12">
+    <div class="row">
+
+    <div class="col-md-6">
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_username">登录名</label>
+                <small class="help-block">登录名必须是唯一的</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="username" name="username" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_name">公司名称</label>
+                <small class="help-block">公司名称必须是唯一的</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="name" name="name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label class="control-label" for="validation_password">密码</label>
+                <small class="help-block">最少六个字符</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control"  data-rule-required="true" id="password" name="password" type="password">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label class="control-label" for="validation_repassword">密码确认</label>
+                <small class="help-block">请再次输入密码</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control"  data-rule-required="true" data-rule-equalto="#password" id="repassword" name="repassword" type="password">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label class="control-label" for="validation_material">物资类型</label>
+                <small class="help-block">请选择物资类型，可多选</small>
+            </div>
+            <div class="col-md-9 controls">
+                <select class="form-control" data-rule-required="true" id="material" name="material" multiple="multiple">
+                #{list items:materialList, as:'material'}
+                    <option value="${material.id}">${material.name}</option>
+                #{/list}
+                </select>
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_url">注册号</label>
+                <small class="help-block">请输入15位数字</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" data-rule-number="true" data-rule-minlength="15" data-rule-maxlength="15" id="registration_number" name="registration_number" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">注册资本</label>
+                <small class="help-block">请输入数字</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-number="true" data-rule-required="true" id="registration_assets" name="registration_assets" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">注册地址</label>
+                <small class="help-block">请输入注册地址</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="registration_address" name="registration_address" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_vin">开户行</label>
+                <small class="help-block">请输入开户行</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="bank_name" name="bank_name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_vin">开户账号</label>
+                <small class="help-block">请输入账号(20位数字)</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" data-rule-number="true" data-rule-minlength="20" data-rule-max-length="20" id="account_name" name="account_name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_vin">税号</label>
+                <small class="help-block">请输入税号(15位数字)</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" data-rule-number="true" id="tfn" name="tfn" type="text">
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_url">法人/公司实际控制者</label>
+                <small class="help-block"></small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="legal_person" name="legal_person" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_secret">生产工厂名称</label>
+                <small class="help-block">请输入工厂名称</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="factory_name" name="factory_name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_secret">生产工厂地址</label>
+                <small class="help-block">请输入工厂地址</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="factory_address" name="factory_address" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_secret">初次供货年度</label>
+                <small class="help-block">请选择初次供货年度</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" data-rule-number="true" id="first_supply" name="first_supply" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">经营模式</label>
+                <small class="help-block">请选择经营模式</small>
+            </div>
+            <div class="col-md-9 controls">
+                <select class="form-control" data-rule-required="true" id="business_model" name="business_model">
+                    <option></option>
+                    <option value="1">自营</option>
+                    <option value="2">经销</option>
+                    <option value="3">挂靠</option>
+                    <option value="0">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">直接联系业务人员姓名</label>
+                <small class="help-block"></small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="contact_name" name="contact_name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">职务</label>
+                <small class="help-block"></small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="contact_job" name="contact_job" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">电话</label>
+                <small class="help-block">请输入手机号码</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="contact_phone" name="contact_phone" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_email">邮箱</label>
+                <small class="help-block">请输入邮箱地址</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" data-rule-email="true" id="contact_email" name="contact_email" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">销售活动决策人员姓名</label>
+                <small class="help-block"></small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="sales_name" name="sales_name" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">职务</label>
+                <small class="help-block"></small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="sales_job" name="sales_job" type="text">
+            </div>
+        </div>
+        <div class="form-group dark">
+            <div class="control-label col-md-3">
+                <label for="validation_phone">电话</label>
+                <small class="help-block">请输入手机号码</small>
+            </div>
+            <div class="col-md-9 controls">
+                <input class="form-control" data-rule-required="true" id="sales_phone" name="sales_phone" type="text">
+            </div>
+        </div>
+        <div class="form-group dark hide">
+            <div class="col-md-12 controls">
+                <select class="form-control" data-rule-required="true" id="files" name="files">
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+    </div>
+    </div>
+
+    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="my-dropzone" class="dropzone-box">
+                <div class="dz-default dz-message">
+                    <i class="fa fa-cloud-upload"></i>
+                    请拖拽文件到此<br><span class="dz-text-small">或点击选择文件</span>
+                </div>
+                <form enctype="multipart/form-data" method="post" action="@{Vender.upload()}">
+                    <div class="fallback">
+                        <input name="file" type="file" multiple="" />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-sm-7 col-sm-offset-5">
+                        <button class="btn btn-success" type="button" id="submit"><i class="icon-save"></i> &{'save'}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#my-dropzone').dropzone({
+            url:"@{Vender.upload()}",
+            maxFilesize: 20,
+            paramName: 'files',
+            addRemoveLinks: true,
+            acceptedFiles:"image/*,application/pdf,.psd",
+            init: function() {
+                this.on("success", function(file, response){
+                    file.serverId=response;
+                    $("#files").append('<option value="'+file.serverId+'" selected="selected">'+file.name+'</option>');
+                });
+                this.on("removedfile", function(file) {
+                    if (!file.serverId) { return; }
+                    $.post("@{Vender.remove()}?id=" + file.serverId);
+                    $("select#files option").filter("[value='"+file.serverId+"']").remove();
+                });
+            },
+            previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size">File size: <span data-dz-size></span></div><div class="dz-thumbnail-wrapper"><div class="dz-thumbnail"><img data-dz-thumbnail><span class="dz-nopreview">No preview</span><div class="dz-success-mark"><i class="fa fa-check-circle-o"></i></div><div class="dz-error-mark"><i class="fa fa-times-circle-o"></i></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div></div></div><div class="progress progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div></div>',
+
+            resize: function(file) {
+                var info = { srcX: 0, srcY: 0, srcWidth: file.width, srcHeight: file.height },
+                        srcRatio = file.width / file.height;
+                if (file.height > this.options.thumbnailHeight || file.width > this.options.thumbnailWidth) {
+                    info.trgHeight = this.options.thumbnailHeight;
+                    info.trgWidth = info.trgHeight * srcRatio;
+                    if (info.trgWidth > this.options.thumbnailWidth) {
+                        info.trgWidth = this.options.thumbnailWidth;
+                        info.trgHeight = info.trgWidth / srcRatio;
+                    }
+                } else {
+                    info.trgHeight = file.height;
+                    info.trgWidth = file.width;
+                }
+                return info;
+            }
+        });
+
+        $( "#submit" ).live( "click", function() {
+            $("#regForm").validate();
+            $("#regForm").submit();
+        });
+
+        $('#business_model').select2({ allowClear: true, placeholder: '请选择经营模式...' }).change(function(){
+            $(this).valid();
+        });
+        $('#material').select2({ placeholder: '请选择物资类型...' }).change(function(){
+            $(this).valid();
+        });
+
+
+    </script>
     </div>
 
 </div>

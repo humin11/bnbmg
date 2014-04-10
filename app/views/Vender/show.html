@@ -1,0 +1,200 @@
+#{extends 'main.html' /}
+#{set title:profile.name /}
+
+<div class="row form form-horizontal ">
+	<div class="col-md-12">
+		<div class="row">
+			
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_username">登录名</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.user.name}</p>
+                        </div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label class="control-label" for="validation_material">物资类型</label>
+						</div>
+						<div class="col-md-9 controls">
+                            %{
+                                def index=0
+                                def materials = new Object[profile.materials.size()]
+                             }%
+							#{list items: profile.materials, as:'material'}
+                                %{
+                                    materials[index]=material.name
+                                    index++
+                                }%
+                            #{/list}
+                                <p class="form-control-static">${materials.join(",")}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_url">注册号</label>
+							</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.registration_number}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">注册资本</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.registration_assets}</p>
+                        </div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">注册地址</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.registration_address}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_vin">开户行</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.bank_name}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_vin">开户账号</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.account_name}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_vin">税号</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.tfn}</p>
+						</div>
+					</div>
+                    <div class="form-group">
+                        <div class="control-label col-md-3">
+                            <label for="validation_url">法人/公司实际控制者</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.legal_person}</p>
+                        </div>
+                    </div>
+
+
+                </div>
+				<div class="col-md-6">
+
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_secret">生产工厂名称</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.factory_name}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_secret">生产工厂地址</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.factory_address}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_secret">初次供货年度</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.first_supply}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">经营模式</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">
+                                #{if profile.business_model=='0'}
+                                    &{'model.qita'}
+                                #{/if}
+                                #{elseif profile.business_model=='1'}
+                                    &{'model.ziying'}
+                                #{/elseif}
+                                #{elseif profile.business_model=='2'}
+                                    &{'model.jingxiao'}
+                                #{/elseif}
+                                #{elseif profile.business_model=='3'}
+                                    &{'model.guakao'}
+                                #{/elseif}
+                            </p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">直接联系业务人员姓名</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.contact_name}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">职务</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.contact_job}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">电话</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.contact_phone}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">销售活动决策人员姓名</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.sales_name}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">职务</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.sales_job}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="control-label col-md-3">
+							<label for="validation_phone">电话</label>
+						</div>
+						<div class="col-md-9 controls">
+                            <p class="form-control-static">${profile.sales_phone}</p>
+						</div>
+					</div>
+					
+				</div>
+				
+			
+		</div>
+	</div>
+</div>
+
+
+    
+	    
+	  

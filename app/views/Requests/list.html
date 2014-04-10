@@ -17,7 +17,23 @@
 	<div class="col-sm-12">
 		<div class="box">
 			<div class="box-content box-padding">
-				#{crud.table fields:['name','material'] /}
+				#{crud.table fields:['name','status','operator']}
+				    #{crud.custom 'status'}
+                        #{if object.status==0}
+                            <label class="label label-info">招标中</label>
+                        #{/if}
+                        #{elseif object.status==2}
+                            <label class="label label-warning">再次竞价中</label>
+                        #{/elseif}
+                        #{else}
+                            <label class="label label-success">招标结束</label>
+                        #{/else}
+				    #{/crud.custom}
+                    #{crud.custom 'operator'}
+                        <a href="@{Vender.tbList(object.id)}" class="btn btn-xs btn-info">查看投标信息</a>
+
+                    #{/crud.custom}
+                #{/crud.table}
 			</div>
 		</div>
 	</div>
