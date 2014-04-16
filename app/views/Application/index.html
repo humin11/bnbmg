@@ -67,15 +67,13 @@
                             &{'name'}
                             </th>
                             <th>物资类型</th>
+                            <th>需求单位</th>
                             <th>型号</th>
-                            <th>厚度</th>
-                            <th>宽度</th>
-                            <th>克重</th>
-                            <th>其他</th>
+
                             <th>采购量</th>
                             <th>单位</th>
                             <th>到货时间</th>
-                            <th>需求工厂明细</th>
+                            <th>属性</th>
                             <th>报价</th>
 
                         </tr>
@@ -102,15 +100,19 @@
                                     #{/else}
                                 </td>
                                 <td>${bj.specification.material.name}</td>
+                                <td>${bj.specification.company}</td>
                                 <td>${bj.specification.specification}</td>
-                                <td>${bj.specification.thickness}</td>
-                                <td>${bj.specification.width}</td>
-                                <td>${bj.specification.weight}</td>
-                                <td>${bj.specification.others}</td>
+
                                 <td>${bj.specification.amount}</td>
                                 <td>${bj.specification.unit}</td>
                                 <td>${bj.specification.arrival_time}</td>
-                                <td></td>
+
+                                <td>
+                                    #{list bj.specification.properties, as:'prop'}
+                                        ${prop.name}:${prop.value}<br/>
+                                    #{/list}
+                                </td>
+
                                 <td>
                                 ${bj.price}#{if bj.secondPrice!=null}/${bj.secondPrice} #{/if}
                                 </td>
@@ -142,6 +144,9 @@
                         &{'name'}
                         </th>
                         <th>
+                        &{'stoptime'}
+                        </th>
+                        <th>
                         &{'status'}
                         </th>
                     #{deadbolt.restrict roles:[['superadmin'],['user']] }
@@ -153,7 +158,9 @@
                     #{list items: allRequests, as:'request'}
                     <tr>
                         <td>${request.name}</td>
+                        <td>${request.stoptime}</td>
                         <td>
+
                             #{if request.status==0}
                                 <label class="label label-info">招标中</label>
                             #{/if}
@@ -167,6 +174,7 @@
                         #{deadbolt.restrict roles:[['superadmin'],['user']] }
                             <td>
                             %{
+                                if((request.stoptime.getTime()-new Date().getTime())>0){
                                 def user = models.User.getByUserName(session.get('username'));
                                 def profile = models.Profile.find("user.id=?",user.id).first();
                                 def toubiao = models.Toubiao.find("request.id=? and user.name=?", request.id, session.get('username')).first()
@@ -176,7 +184,7 @@
                                     <a class="btn btn-info btn-xs" href="@{Vender.baojia(request.id)}">我要报价</a>
                                 #{/if}
                                 #{else}
-                                    <a class="btn btn-link btn-xs" href="#">请等待管理员审核</a>
+                                    <a class="btn btn-warning btn-xs" href="#">请等待管理员审核</a>
                                 #{/else}
 
                             %{ } else { }%
@@ -186,7 +194,9 @@
                                 #{else}
                                     <a class="btn btn-success btn-xs" href="#">已投标</a>
                                 #{/else}
-                            %{ } }%
+                            %{ } } else {}%
+                                <a class="btn btn-link btn-xs" href="#">投标已过期</a>
+                             %{}}%
                             </td>
                         #{/deadbolt.restrict}
                     </tr>

@@ -1,6 +1,12 @@
 #{extends 'main.html' /}
 #{set title:req.name /}
 
+<style type="text/css">
+    .dataTables_filter {
+        float: right;
+    }
+</style>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="page-header">
@@ -119,7 +125,12 @@
 <!-- / Modal -->
 
 <script>
-    $(".table").dataTable().rowGrouping();
+    $(".table").dataTable({
+        "sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
+        "oTableTools": {
+            "sSwfPath": "/public/images/copy_csv_xls_pdf.swf"
+        }
+    }).rowGrouping();
     function again(id){
         $("#toubiaoid").val(id);
         $("#myModal").modal();

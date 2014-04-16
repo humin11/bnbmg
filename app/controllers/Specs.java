@@ -34,8 +34,9 @@ public class Specs extends CRUD {
         flash.success(play.i18n.Messages.get("crud.created", type.modelName));
         Gson gson = new Gson();
 
-//        renderText(gson.toJson(object));
-        renderJSON(object);
+        renderText(gson.toJson(object));
+//        System.out.println(gson.toJson(object));
+//        renderJSON(object);
     }
 
 }

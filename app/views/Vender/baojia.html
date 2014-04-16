@@ -39,15 +39,13 @@
                     <thead>
                     <tr>
                         <th>物资类型</th>
+                        <th>需求单位</th>
                         <th>型号</th>
-                        <th>厚度</th>
-                        <th>宽度</th>
-                        <th>克重</th>
-                        <th>其他</th>
+
                         <th>采购量</th>
                         <th>单位</th>
                         <th>到货时间</th>
-                        <th>需求工厂明细</th>
+                        <th>属性明细</th>
                         <th>报价</th>
                     </tr>
                     </thead>
@@ -55,15 +53,17 @@
                         #{list items: req.specifications, as:'spec'}
                             <tr>
                                 <td>${spec.material.name}</td>
+                                <td>${spec.company}</td>
                                 <td>${spec.specification}</td>
-                                <td>${spec.thickness}</td>
-                                <td>${spec.width}</td>
-                                <td>${spec.weight}</td>
-                                <td>${spec.others}</td>
+
                                 <td>${spec.amount}</td>
                                 <td>${spec.unit}</td>
                                 <td>${spec.arrival_time}</td>
-                                <td><a href="@{Specs.attachment(spec.id,'detail_spec')}" target="_blank">文件</a></td>
+                                <td>
+                                    #{list spec.properties, as:'prop'}
+                                        ${prop.name}:${prop.value}<br/>
+                                    #{/list}
+                                </td>
                                 <td>
                                     <input type="text" name="price${spec.id}" id="price${spec.id}" data-rule-number="true" />
                                 </td>

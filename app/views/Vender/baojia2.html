@@ -43,15 +43,13 @@
                     <thead>
                     <tr>
                         <th>物资类型</th>
+                        <th>需求单位</th>
                         <th>型号</th>
-                        <th>厚度</th>
-                        <th>宽度</th>
-                        <th>克重</th>
-                        <th>其他</th>
+
                         <th>采购量</th>
                         <th>单位</th>
                         <th>到货时间</th>
-                        <th>需求工厂明细</th>
+                        <th>属性明细</th>
                         <th>第一次报价</th>
                         <th></th>
                     </tr>
@@ -60,6 +58,7 @@
                         #{list items: toubiao.baojias, as:'bj'}
                             <tr>
                                 <td>${bj.specification.material.name}</td>
+                                <td>${bj.specification.company}</td>
                                 <td>${bj.specification.specification}</td>
                                 <td>${bj.specification.thickness}</td>
                                 <td>${bj.specification.width}</td>
@@ -68,7 +67,11 @@
                                 <td>${bj.specification.amount}</td>
                                 <td>${bj.specification.unit}</td>
                                 <td>${bj.specification.arrival_time}</td>
-                                <td></td>
+                                <td>
+                                    #{list bj.specification.properties, as:'prop'}
+                                        ${prop.name}:${prop.value}<br/>
+                                    #{/list}
+                                </td>
                                 <td>${bj.price}</td>
                                 <td>
                                     <input type="text" name="price${bj.specification.id}-2" id="price${bj.specification.id}-2" data-rule-number="true" />

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html>
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if IE 9]>         <html class="ie9 gt-ie8"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="gt-ie8 gt-ie9 not-ie"> <!--<![endif]-->
     <head>
         <title>#{get 'title' /} | &{'application.name'}</title>
         <meta charset="${_response_encoding}">
@@ -72,6 +74,7 @@
         <script src="@{'/public/javascripts/plugins/typeahead/typeahead.js'}" type="text/javascript"></script>
 
         <script src="@{'/public/javascripts/plugins/dropzone/dropzone.min.js'}" type="text/javascript"></script>
+        <script src="@{'/public/javascripts/jquery.uploadify.js'}" type="text/javascript"></script>
 
         <script src="@{'/public/javascripts/pixel-admin.js'}" type="text/javascript"></script>
 			

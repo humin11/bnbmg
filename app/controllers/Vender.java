@@ -25,6 +25,26 @@ public class Vender extends Controller {
 		render(materialList);
 	}
 
+    public static void postProperty(){
+        String name = params.get("name");
+        String value = params.get("value");
+        Prop p = new Prop();
+        p.name = name;
+        p.value = value;
+        p.save();
+        renderText(p.id.toString());
+    }
+
+    public static void removeProperty(){
+        String id = params.get("id");
+        Prop p = Prop.findById(Long.valueOf(id));
+
+        if(p!=null)
+            p.delete();
+        renderText(id);
+    }
+
+
     public static void toImp(){
         render();
     }
@@ -128,7 +148,7 @@ public class Vender extends Controller {
                 toubiao.baojias.add(baojia);
 
             }
-            //toubiao.save();
+            toubiao.save();
         }
         redirect("/");
     }

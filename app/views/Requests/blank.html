@@ -10,6 +10,7 @@
 				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
 			</h1>
             <div class="pull-right">
+                <button class="btn btn-sm btn-labeled btn-info" data-toggle="modal" data-target="#specModal"><span class="btn-label icon fa fa-cloud-upload"></span>&{'spec.upload'}</button>
                 <button class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</button>
             </div>
 		</div>
@@ -25,18 +26,26 @@
                     <h4 class="modal-title" id="myModalLabel">添加采购规格</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form form-horizontal validate-form" method="post" action="@{Specs.create()}" id="specForm"  enctype="multipart/form-data">
-                        <div class="form-group">
+                    <form class="form form-horizontal validate-form" method="post" action="@{Specs.create()}" id="specForm" name="specForm"  enctype="multipart/form-data">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'specification'}</label>
+                                <label for="validation_name">&{'specification'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <input class="form-control" data-rule-required="true" id="object_specification" name="object.specification" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'material'}</label>
+                                <label for="validation_name">&{'spec.company'}(*)</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input class="form-control" data-rule-required="true" id="object_company" name="object.company" type="text" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group dark">
+                            <div class="control-label col-md-3">
+                                <label for="validation_name">&{'material'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <select class='form-control' placeholder='请选择物资类型' id="object_material" data-rule-required="true" name="object.material.id">
@@ -46,84 +55,82 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'thickness'}</label>
+                                <label for="validation_name">&{'属性'}</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input class="form-control" id="object_thickness" name="object.thickness" type="text" value="" />
+                                 <div class="row">
+                                        <div class="col-md-5">
+                                            <select class='form-control' placeholder='请选择属性' id="object_property" name="object.property">
+                                                <option value="厚度">厚度</option>
+                                                <option value="宽度">宽度</option>
+                                                <option value="高度">高度</option>
+                                                <option value="克重">克重</option>
+                                                <option value="上锌量">上锌量</option>
+                                                <option value="其他">其他</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" id="object_property_value" name="object_property_value">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-success" id="propSave" >&{'crud.add',''}</button>
+                                        </div>
+                                    </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul class="list-group no-margin" id="propertyList">
+
+                                        </ul>
+                                    </div>
+                                    <select class='form-control hide' multiple id="object_properties" name="object.properties.id">
+
+                                    </select>
+                                </div>
+
+
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'width'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" id="object_width" name="object.width" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'weight'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" id="object_weight" name="object.weight" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'others'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" id="object_others" name="object.others" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'amount'}</label>
+                                <label for="validation_name">&{'amount'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <input class="form-control" data-rule-required="true" id="object_amount" name="object.amount" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'unit'}</label>
+                                <label for="validation_name">&{'unit'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <input class="form-control" data-rule-required="true" id="object_unit" name="object.unit" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'arrival_time'}</label>
+                                <label for="validation_name">&{'arrival_time'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <input class="form-control" data-rule-required="true" id="object_arrival_time" name="object.arrival_time" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'description'}</label>
+                                <label for="validation_name">&{'description'}(*)</label>
                             </div>
                             <div class="col-md-9 controls">
                                 <input class="form-control" data-rule-required="true" id="object_description" name="object.description" type="text" value="" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'detail_spec'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_detail_spec" name="object.detail_spec" type="file" value="" />
-                            </div>
-                        </div>
+
 
                     </form>
                 </div> <!-- / .modal-body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
-                    <button type="button" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+                    <button type="submit" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
                 </div>
             </div> <!-- / .modal-content -->
         </div> <!-- / .modal-dialog -->
@@ -143,7 +150,7 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group dark">
                         <div class="control-label col-md-3">
                             <label for="object_name">&{'name'}</label>
                         </div>
@@ -153,7 +160,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group dark">
                         <div class="control-label col-md-3">
                             <label for="object_style">&{'style'}</label>
                         </div>
@@ -169,7 +176,7 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group dark">
                         <div class="control-label col-md-3">
                             <label for="object_description">&{'description'}</label>
                         </div>
@@ -179,7 +186,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group" id="styleGroup" style="display: none">
+                    <div class="form-group dark" id="styleGroup" style="display: none">
                         <div class="control-label col-md-3">
                             <label for="object_profiles">请选择供货商</label>
                         </div>
@@ -206,7 +213,7 @@
 
 
             <div class="row hidden">
-                <div class="form-group" id="styleGroup" style="display: none">
+                <div class="form-group dark" id="styleGroup" style="display: none">
                     <div class="control-label col-md-3">
                         <label for="object_specifications">规格型号</label>
                     </div>
@@ -228,15 +235,13 @@
                         <table class="table table-bordered" id="specTable">
                             <thead>
                                 <th>物资类型</th>
+                                <th>需求单位</th>
                                 <th>型号</th>
-                                <th>厚度</th>
-                                <th>宽度</th>
-                                <th>克重</th>
-                                <th>其他</th>
                                 <th>采购量</th>
                                 <th>单位</th>
                                 <th>到货时间</th>
-                                <th>需求工厂明细</th>
+                                <th>属性</th>
+
                                 <th></th>
                             </thead>
                             <tbody>
@@ -279,24 +284,46 @@
         }
     });
 
+
+    $('.remove-property').live('click', function() {
+        $(this).closest('li').remove();
+        $.get("/Vender/removeProperty?id="+$(this).attr("id"), function(data){
+            $("select#object_properties option").filter("[value='"+data+"']").remove();
+
+        });
+    });
+
     var table = $("#specTable").dataTable();
     $('.dataTables_length>label>.form-control').select2().change(function(){
         $(this).valid();
     });
 
-    $("#specSave").live('click',function(){
-        $("#specForm").validate();
-        $("#specForm").ajaxSubmit({
-            dataType:'json',
-            success: function(data){
-                $("#specForm")[0].reset();
-                $("#specModal").modal('hide');
-                $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
-                table.fnAddData([data.material.name, data.specification, data.thickness, data.width, data.weight, data.others, data.amount, data.unit, data.arrival_time,  '','<a href="#" >x</a> ']);
-            }
+    $("#propSave").live('click', function(e){
+        var name = $("#object_property").val();
+        var value = $("#object_property_value").val();
+
+        var filter = $("select#object_properties option").filter("[name='"+name+"']");
+        if(filter.length>0){
+            alert("您已经输入您选择的属性");
+            return;
+        }
+        if(value==""){
+            alert("请输入属性对应的值");
+            return;
+        }
+
+         $.post("@{Vender.postProperty}",{name: name, value: value}, function(data){
+
+            var html = "<li class=\"list-group-item no-border-hr no-border-b padding-xs-hr\">"+name+":"+value+" <span class=\"label pull-right remove-property\" id='"+data+"'><a href=\"#\" >删除</a></span></li>";
+            $("#propertyList").append(html);
+            $("#object_properties").append('<option value="'+data+'" name="'+name+'" selected="selected">'+name+'</option>');
+            $("#object_property_value").val("");
         });
 
+        return;
     });
+
+
 
     $('#object_profiles').select2({ placeholder: '请选择供应商...' }).change(function(){
         $(this).valid();
@@ -306,8 +333,31 @@
         $(this).valid();
     });
 
+    $('#object_property').select2({ placeholder: '请选择属性...' }).change(function(){
+        $(this).valid();
+    });
+
     $('#object_image').pixelFileInput({ placeholder: 'No file selected...' });
-    $('#object_detail_spec').pixelFileInput({ placeholder: 'No file selected...' });
     $('#object_arrival_time').datetimepicker({ format:'Y-m-d h:i' });
+
+
+    $("#specSave").live('click',function(){
+        $("#specForm").validate();
+        $("#specForm").ajaxSubmit({
+            dataType:'json',
+            success: function(data,statusText, xhr, $form){
+                $("#specModal").modal('hide');
+                $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
+                var prop = "";
+                $.each(data.properties, function(i, item) {
+                    prop+=item.name+":"+item.value+"<br />";
+                });
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'']);
+            }
+        });
+
+
+    });
+
 
 </script>

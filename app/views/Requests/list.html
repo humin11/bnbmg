@@ -17,7 +17,7 @@
 	<div class="col-sm-12">
 		<div class="box">
 			<div class="box-content box-padding">
-				#{crud.table fields:['name','status','operator']}
+				#{crud.table fields:['name','status','stoptime','operator']}
 				    #{crud.custom 'status'}
                         #{if object.status==0}
                             <label class="label label-info">招标中</label>
@@ -30,8 +30,12 @@
                         #{/else}
 				    #{/crud.custom}
                     #{crud.custom 'operator'}
-                        <a href="@{Vender.tbList(object.id)}" class="btn btn-xs btn-info">查看投标信息</a>
-
+                        #{if (new Date().getTime()-object.stoptime.getTime())>=3600}
+                            <a href="@{Vender.tbList(object.id)}" class="btn btn-xs btn-info">查看投标信息</a>
+                        #{/if}
+                        #{else}
+                            <a href="#" class="btn btn-xs btn-link">请等待开标</a>
+                        #{/else}
                     #{/crud.custom}
                 #{/crud.table}
 			</div>

@@ -8,7 +8,10 @@ import play.db.jpa.Model;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Humin on 4/7/14.
@@ -17,6 +20,8 @@ import java.util.Date;
 public class Specification extends Model {
 
     public String name;
+
+    public String company;
 
     @CRUD.Exclude
     @Required
@@ -49,5 +54,8 @@ public class Specification extends Model {
     public String description;
 
     public Blob detail_spec;
+
+    @OneToMany
+    public List<Prop> properties = new ArrayList<Prop>();
 
 }
