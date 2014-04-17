@@ -25,7 +25,15 @@
                         ${object.create_at}
                     #{/crud.custom}
 				    #{crud.custom 'audit_state'}
-                        ${object.is_audit}
+                        #{if object.is_audit==1}
+                            <label class="label label-success">&{'audit_yes'}</label>
+                        #{/if}
+                        #{elseif object.is_audit==2}
+                            <label class="label label-danger">&{'audit_no'}</label>
+                        #{/elseif}
+                        #{else }
+                            <label class="label label-default">&{'audit_standby'}</label>
+                        #{/else}
                     #{/crud.custom}
 				    #{crud.custom 'audit_message'}
                         ${object.message}

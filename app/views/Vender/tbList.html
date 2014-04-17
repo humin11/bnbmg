@@ -33,15 +33,12 @@
                                 &{'name'}
                                 </th>
                                 <th>物资类型</th>
+                                <th>需求单位</th>
                                 <th>型号</th>
-                                <th>厚度</th>
-                                <th>宽度</th>
-                                <th>克重</th>
-                                <th>其他</th>
                                 <th>采购量</th>
                                 <th>单位</th>
                                 <th>到货时间</th>
-                                <th>需求工厂明细</th>
+                                <th>属性明细</th>
                                 <th>1st报价</th>
                                 <th>2nd报价</th>
                             </tr>
@@ -69,15 +66,16 @@
                                             #{/else}
                                     </td>
                                     <td>${bj.specification.material.name}</td>
+                                    <td>${bj.specification.company}</td>
                                     <td>${bj.specification.specification}</td>
-                                    <td>${bj.specification.thickness}</td>
-                                    <td>${bj.specification.width}</td>
-                                    <td>${bj.specification.weight}</td>
-                                    <td>${bj.specification.others}</td>
                                     <td>${bj.specification.amount}</td>
                                     <td>${bj.specification.unit}</td>
                                     <td>${bj.specification.arrival_time}</td>
-                                    <td><a href="@{Specs.attachment(bj.specification.id,'detail_spec')}" target="_blank">文件</a> </td>
+                                    <td>
+                                        #{list bj.specification.properties, as:'prop'}
+                                            ${prop.name}:${prop.value}<br/>
+                                        #{/list}
+                                    </td>
                                     <td>
                                         ${bj.price}
                                     </td>

@@ -50,7 +50,6 @@ public class Specification extends Model {
 
     @Lob
     @CRUD.Exclude
-    @Required
     public String description;
 
     public Blob detail_spec;

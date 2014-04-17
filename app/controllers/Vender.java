@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import com.csvreader.CsvReader;
 import models.*;
@@ -24,6 +21,26 @@ public class Vender extends Controller {
 		List<Material> materialList = Material.findAll();
 		render(materialList);
 	}
+
+    public static void checkUsername(String username){
+        Boolean result= true;
+        User user = User.find("username=?",username).first();
+        if(user!=null){
+            result = false;
+        }
+
+        renderJSON(result);
+    }
+
+    public static void checkCompany(String name){
+        Boolean result= true;
+        Profile profile = Profile.find("name=?",name).first();
+        if(profile!=null){
+            result = false;
+        }
+
+        renderJSON(result);
+    }
 
     public static void postProperty(){
         String name = params.get("name");
@@ -145,10 +162,14 @@ public class Vender extends Controller {
                     baojia.thirdPrice = Double.valueOf(price3);
                 baojia.save();
 
-                toubiao.baojias.add(baojia);
+                if(!toubiao.baojias.contains(baojia)) {
+
+                    toubiao.baojias.add(baojia);
+                    toubiao.save();
+                }
 
             }
-            toubiao.save();
+
         }
         redirect("/");
     }
@@ -297,6 +318,27 @@ public class Vender extends Controller {
             n += dn;
         } while (n.length()<8);
         return n;
+    }
+
+    public static void impSpec(File file){
+        if(file!=null){
+            List<Specification> specifications = new ArrayList<Specification>();
+            try{
+                FileReader input = new FileReader(file);
+                CsvReader reader = new CsvReader(input);
+                reader.readHeaders();
+                while(reader.readRecord()){
+                    String materialName = reader.getValues()[0];
+                    String specification = reader.getValues()[1];
+                    String number = reader.getValues()[2];
+                    String unit = reader.getValues()[3];
+                    String company = reader.getValues()[4];
+                    String date = reader.getValues()[5];
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void imp(File file){

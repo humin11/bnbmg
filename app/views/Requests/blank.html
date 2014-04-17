@@ -118,10 +118,10 @@
                         </div>
                         <div class="form-group dark">
                             <div class="control-label col-md-3">
-                                <label for="validation_name">&{'description'}(*)</label>
+                                <label for="validation_name">&{'description'}</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_description" name="object.description" type="text" value="" />
+                                <input class="form-control" id="object_description" name="object.description" type="text" value="" />
                             </div>
                         </div>
 
@@ -155,7 +155,7 @@
                             <label for="object_name">&{'name'}</label>
                         </div>
                         <div class="col-md-9 controls">
-                            <input class="form-control" data-rule-required="true" id="object_name" name="object.name" type="text" value="${object.name}" />
+                            <input class="form-control" id="object_name" name="object.name" type="text" value="${object.name}" />
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                             <label for="object_style">&{'style'}</label>
                         </div>
                         <div class="col-md-9 controls">
-                            <select class="form-control" name="object.style" id="object_style">
+                            <select class="form-control" name="object.style" id="object_style" data-rule-required="true" >
                                 <option value="1">公有</option>
                                 <option value="2">私有</option>
                             </select>
@@ -181,7 +181,7 @@
                             <label for="object_description">&{'description'}</label>
                         </div>
                         <div class="col-md-9 controls">
-                            <textarea class="form-control" id="object_description" data-rule-required="true" name="object.description"></textarea>
+                            <textarea class="form-control" id="object_description" name="object.description"></textarea>
                         </div>
                     </div>
                 </div>
@@ -303,13 +303,13 @@
         var value = $("#object_property_value").val();
 
         var filter = $("select#object_properties option").filter("[name='"+name+"']");
-        if(filter.length>0){
+        if(name!='其他' && filter.length>0){
             alert("您已经输入您选择的属性");
-            return;
+            return false;
         }
         if(value==""){
             alert("请输入属性对应的值");
-            return;
+            return false;
         }
 
          $.post("@{Vender.postProperty}",{name: name, value: value}, function(data){
@@ -320,7 +320,7 @@
             $("#object_property_value").val("");
         });
 
-        return;
+        return false;
     });
 
 
@@ -337,16 +337,23 @@
         $(this).valid();
     });
 
-    $('#object_image').pixelFileInput({ placeholder: 'No file selected...' });
-    $('#object_arrival_time').datetimepicker({ format:'Y-m-d h:i' });
+    $('#object_image').pixelFileInput({ placeholder: '选择附件...' });
+    $('#object_arrival_time').datetimepicker({ format:'Y-m-d H:i' });
+
+    $("#requestForm").validate();
 
 
+    $("#specForm").validate();
     $("#specSave").live('click',function(){
         $("#specForm").validate();
+
         $("#specForm").ajaxSubmit({
             dataType:'json',
             success: function(data,statusText, xhr, $form){
                 $("#specModal").modal('hide');
+                $("#specForm")[0].reset();
+                $( "#propertyList" ).find( "li").remove();
+                $( "#object_properties" ).find( "option").remove();
                 $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
                 var prop = "";
                 $.each(data.properties, function(i, item) {

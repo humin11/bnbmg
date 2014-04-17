@@ -9,7 +9,12 @@
             </h1>
             <div class="pull-right">
                 #{deadbolt.restrict roles:[['superadmin'],['admin'],['system'],['operator']] }
-                <a class="btn box-collapse btn-xs btn-success" data-toggle="modal" href="#modal-audit">&{'audit'}</a>
+                #{if profile.is_audit!=1}
+                    <a class="btn box-collapse btn-xs btn-success" data-toggle="modal" href="#modal-audit">&{'audit'}</a>
+                #{/if}
+                #{else}
+                    <a class="btn box-collapse btn-xs btn-link" href="#">&{'audit'}</a>
+                #{/else}
                 #{/deadbolt.restrict}
                 #{deadbolt.restrict roles:[['superadmin'],['system']] }
                 <a class="btn box-collapse btn-xs btn-warning" href="@{show(profile.id)}">&{'edit'}</a>
@@ -66,7 +71,7 @@
                     <a class="close" data-dismiss="alert" href="#" aria-hidden="true">×
                     </a>
                     <i class="icon-info-sign"></i>
-                    &{'audit_yes'}
+                    审核意见反馈成功!
                 </div>
             </div>
         </div>
@@ -100,7 +105,7 @@
                         </tr>
                         <tr>
                             <td><b>&{'registration_assets'}</b></td>
-                            <td>${profile.registration_assets}</td>
+                            <td>${profile.registration_assets}${profile.registration_assets_unit}</td>
                             <td><b>&{'factory_address'}</b></td>
                             <td>${profile.factory_address}</td>
                         </tr>
@@ -114,7 +119,20 @@
                             <td><b>&{'bank_name'}</b></td>
                             <td>${profile.bank_name}</td>
                             <td><b>&{'business_model'}</b></td>
-                            <td>${profile.business_model}</td>
+                            <td>
+                                #{if profile.business_model=="1"}
+                                &{'model.ziying'}
+                                #{/if}
+                                #{elseif profile.business_model=="2"}
+                                &{'model.jingxiao'}
+                                #{/elseif}
+                                #{elseif profile.business_model=="3"}
+                                &{'model.guakao'}
+                                #{/elseif}
+                                #{else}
+                                &{'model.qita'}
+                                #{/else}
+                            </td>
                         </tr>
                         <tr>
                             <td><b>&{'account_name'}</b></td>

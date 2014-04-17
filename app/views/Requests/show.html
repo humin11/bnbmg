@@ -41,7 +41,11 @@
                 </tr>
                 <tr>
                     <td><b>&{'files'}</b></td>
-                    <td colspan="3"><a class="currentAttachment" href="@{attachment(object.id, 'image')}" target="_blank">${object.image.getFile().getName()}</a></td>
+                    <td colspan="3">
+                        #{ifnot object.image}
+                            <a class="currentAttachment" href="@{attachment(object.id, 'image')}" target="_blank">${object.image.getFile().getName()}</a>
+                        #{/ifnot}
+                    </td>
 
                 </tr>
             </tbody>

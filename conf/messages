@@ -10,6 +10,11 @@ edit=编辑
 
 dashboard=首页
 
+spec.import=导入采购规格
+
+Material=物资类型
+Materials=物资类型管理
+
 status=状态
 operator=操作
 
@@ -34,7 +39,7 @@ audit_date=审核时间
 audit_message=审核意见
 audit_state=审核状态
 
-image=文件名
+image=附件
 Files=资质文件
 QA=资质文件
 
@@ -91,7 +96,7 @@ amount=数量
 unit=单位
 arrival_time=到货时间
 description=描述
-files=相关文件
+files=相关附件
 
 registration_number=注册号
 registration_assets=注册资本

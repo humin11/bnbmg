@@ -64,7 +64,6 @@ public class Request extends Model {
     public List<Specification> specifications = new ArrayList<Specification>();
 
     @Lob
-    @Required
     @CRUD.Exclude
     public String description;
 

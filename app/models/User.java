@@ -19,11 +19,13 @@ import models.deadbolt.Role;
 import models.deadbolt.RoleHolder;
 import play.data.validation.Password;
 import play.data.validation.Required;
+import play.data.validation.Unique;
 import play.db.jpa.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import controllers.CRUD.Exclude;
 
@@ -34,9 +36,11 @@ import java.util.List;
  * @author Steve Chaloner (steve@objectify.be)
  */
 @Entity
+@Table(name = "bnbm_user")
 public class User extends Model implements RoleHolder
 {
     @Required
+    @Unique
     public String username;
 
     @Exclude

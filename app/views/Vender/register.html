@@ -90,7 +90,10 @@
                             <label for="validation_phone">注册资本单位</label>
                         </div>
                         <div class="col-md-9 controls">
-                            <input class="form-control" data-rule-required="true" id="registration_assets_unit" name="registration_assets_unit" type="text">
+                            <select class="form-control" data-rule-required="true" id="registration_assets_unit" name="registration_assets_unit">
+                                <option value="万元">万元</option>
+                                <option value="万美元">万美元</option>
+                            </select>
                         </div>
                     </div>
 					<div class="form-group dark">
@@ -266,7 +269,7 @@
 					</div>
 					<div class="form-group dark hide">
                         <div class="col-md-12 controls">
-                            <select class="form-control" data-rule-required="true" id="files" name="files">
+                            <select class="form-control" data-rule-required="true" id="files" name="files" multiple>
                             </select>
                         </div>
 					</div>
@@ -358,7 +361,32 @@
 //    }
 
     $( "#submit" ).live( "click", function() {
-        $("#regForm").validate();
+        $("#regForm").validate({
+            rules: {
+                username: {
+                    remote: {
+                        url: "@{Vender.checkUsername()}",
+                        type: "post",
+                        data: {
+                            username: function() {
+                                return $( "#username" ).val();
+                            }
+                        }
+                    }
+                },
+                company: {
+                    remote: {
+                        url: "@{Vender.checkCompany()}",
+                        type: "post",
+                        data: {
+                            name: function() {
+                                return $( "#name" ).val();
+                            }
+                        }
+                    }
+                }
+            }
+        });
         $("#regForm").submit();
     });
 

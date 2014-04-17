@@ -16,14 +16,21 @@
             <input type="hidden" id="request" name="request" value="${req.id}">
             <div class="form-group dark">
                 <label class="col-md-3 control-label" for="inputPassword4">支付方式</label>
-                <div class="col-md-9">
-                    <input class="form-control" id="payStyle" name="payStyle" data-rule-required="true" placeholder="" type="text" value="">
+                <div class="col-md-9 controls">
+                    <select class="form-control" name="payStyle" id="payStyle">
+                        <option value="银行网付">银行网付</option>
+                        <option value="银行承兑">银行承兑</option>
+                        <option value="其它">其它</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group dark">
                 <label class="col-md-3 control-label" for="inputPassword4">开票方式</label>
-                <div class="col-md-9">
-                    <input class="form-control" id="invoice" name="invoice" data-rule-required="true" placeholder="" type="text" value="">
+                <div class="col-md-9 controls">
+                    <select class="form-control" name="invoice" id="invoice">
+                        <option value="一票开票">一票开票</option>
+                        <option value="两票开票">两票开票</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group dark">
@@ -46,7 +53,7 @@
                         <th>单位</th>
                         <th>到货时间</th>
                         <th>属性明细</th>
-                        <th>报价</th>
+                        <th>到场单价(元)</th>
                     </tr>
                     </thead>
                     <tbody>
