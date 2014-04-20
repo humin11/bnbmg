@@ -18,6 +18,13 @@
 </div>
 <div class="row">
 	<div class="col-sm-12">
+
+        #{if flash.success}
+            <div class="note note-info padding-xs-vr">
+            ${flash.success}
+            </div>
+        #{/if}
+
         #{crud.table fields:['username','name','materials','is_audit']}
            #{crud.custom 'username'}
                <a href="@{view(object.id)}">${object.user.name}</a>

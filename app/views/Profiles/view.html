@@ -8,16 +8,34 @@
                 <i class="icon-ok"></i> <span>&{'crud.list.title', type.modelName} #{if profile.is_audit==1}<label class="label label-success">&{'audit_yes'}#{/if}#{elseif profile.is_audit==2}<label class="label label-danger">&{'audit_no'}</label>#{/elseif}#{else}<label class="label label-default">&{'audit_standby'}</label>#{/else}</span>
             </h1>
             <div class="pull-right">
-                #{deadbolt.restrict roles:[['superadmin'],['admin'],['system'],['operator']] }
+                #{deadbolt.restrict roles:[['operator']] }
                 #{if profile.is_audit!=1}
+                    %{
+                        def is_audit=false;
+                        for(models.Material m: profile.materials){
+                            if(user!=null && user.materials.contains(m)){
+                                is_audit=true;
+                            }
+                        }
+                        if(is_audit){
+                    }%
                     <a class="btn box-collapse btn-xs btn-success" data-toggle="modal" href="#modal-audit">&{'audit'}</a>
+                    %{}}%
                 #{/if}
                 #{else}
                     <a class="btn box-collapse btn-xs btn-link" href="#">&{'audit'}</a>
                 #{/else}
                 #{/deadbolt.restrict}
+                #{deadbolt.restrict roles:[['superadmin'],['admin'],['system']] }
+                    #{if profile.is_audit!=1}
+                        <a class="btn box-collapse btn-xs btn-success" data-toggle="modal" href="#modal-audit">&{'audit'}</a>
+                    #{/if}
+                    #{else}
+                        <a class="btn box-collapse btn-xs btn-link" href="#">&{'audit'}</a>
+                    #{/else}
+                #{/deadbolt.restrict}
                 #{deadbolt.restrict roles:[['superadmin'],['system']] }
-                <a class="btn box-collapse btn-xs btn-warning" href="@{show(profile.id)}">&{'edit'}</a>
+                    <a class="btn box-collapse btn-xs btn-warning" href="@{show(profile.id)}">&{'edit'}</a>
                 #{/deadbolt.restrict}
             </div>
         </div>
@@ -174,6 +192,15 @@
                             <td></td>
                             <td><b>&{'sales_phone'}</b></td>
                             <td>${profile.sales_phone}</td>
+                        </tr>
+
+                        <tr>
+                            <td><b>资质文件</b></td>
+                            <td colspan="3">
+                                #{list items:profile.files,as:'file'}
+                                    <a class="currentAttachment" href="@{QA.attachment(file.id, 'image')}" target="_blank"><p class="text-default">${file.name}</p></a>
+                                #{/list}
+                            </td>
                         </tr>
 
                     </tbody>

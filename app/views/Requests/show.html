@@ -1,91 +1,440 @@
 #{extends 'CRUD/layout.html' /}
 #{set title:messages.get('crud.show.title', type.modelName) /}
 
+<div id="crudBlank" class="${type.name}">
+
 <div class="row">
-	<div class="col-sm-12">
-		<div class="page-header">
-			<h1 class="pull-left">
-				<i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
-			</h1>
-
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-12">
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <td><b>&{'name'}</b></td>
-                    <td>${object.name}</td>
-                    <td><b>&{'style'}</b></td>
-                    <td>
-                        ${object.style}
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>&{'description'}</b></td>
-                    <td>${object.description}</td>
-                    <td><b></b></td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>&{'starttime'}</b></td>
-                    <td>${object.starttime}</td>
-                    <td><b>&{'stoptime'}</b></td>
-                    <td>
-                        ${object.stoptime}
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>&{'files'}</b></td>
-                    <td colspan="3">
-                        #{ifnot object.image}
-                            <a class="currentAttachment" href="@{attachment(object.id, 'image')}" target="_blank">${object.image.getFile().getName()}</a>
-                        #{/ifnot}
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
-	</div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-primary">
-            <table class="table table-bordered" id="specTable">
-                <thead>
-                <th>物资类型</th>
-                <th>需求单位</th>
-                <th>型号</th>
-                <th>采购量</th>
-                <th>单位</th>
-                <th>到货时间</th>
-                <th>属性</th>
-
-
-                </thead>
-                <tbody>
-                    #{list items: object.specifications, as:'spec'}
-                    <tr>
-                        <td>${spec.material.name}</td>
-                        <td>${spec.company}</td>
-                        <td>${spec.specification}</td>
-                        <td>${spec.amount}</td>
-                        <td>${spec.unit}</td>
-                        <td>${spec.arrival_time}</td>
-                        <td>
-                            #{list spec.properties, as:'prop'}
-                                ${prop.name}:${prop.value}<br/>
-                            #{/list}
-                        </td>
-
-                    </tr>
-                    #{/list}
-                </tbody>
-            </table>
+    <div class="col-sm-12">
+        <div class="page-header">
+            <h1 class="pull-left">
+                <i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
+            </h1>
+            <div class="pull-right">
+                <button class="btn btn-sm btn-labeled btn-info" data-toggle="modal" data-target="#impSpecModal"><span class="btn-label icon fa fa-cloud-upload"></span>&{'spec.upload'}</button>
+                <a class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" href="@{Vender.newSpec()}" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</a>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="specModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">编辑采购规格</h4>
+            </div>
+            <div class="modal-body">
+
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
+
+
+<!-- Modal -->
+<div id="editSpecModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myEditModalLabel">编辑采购规格</h4>
+            </div>
+            <div class="modal-body">
+
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="editSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
+
+
+<!-- Modal -->
+<div id="impSpecModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myImpModalLabel">导入采购规格</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form form-horizontal validate-form" method="post" action="@{Vender.impSpec()}" id="impSpecForm" name="impSpecForm"  enctype="multipart/form-data">
+
+                    <div class="form-group dark">
+                        <div class="control-label col-md-3">
+                            <label for="validation_name">&{'file.imp'}</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <input class="form-control" id="file" name="file" type="file" value="" />
+                        </div>
+                    </div>
+
+                </form>
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="impSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
+
+
+<div class="objectForm">
+#{form action:@save(object._key()), enctype:'multipart/form-data', class:'form form-horizontal validate-form', id:'requestForm'}
+%{
+    def username = session.get("username")
+    user = models.User.getByUserName(username);
+    }%
+
+    <input type="hidden" id="object_user" name="object.user.id" value="${user.id}"/>
+    <input type="hidden" id="object.profiles.id" name="object.profiles.id" value="" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group dark">
+                <div class="control-label col-md-3">
+                    <label for="object_name">&{'name'}</label>
+                </div>
+                <div class="col-md-9 controls">
+                    <input class="form-control" id="object_name" name="object.name" type="text" value="${object.name}" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group dark">
+                <div class="control-label col-md-3">
+                    <label for="object_style">&{'style'}</label>
+                </div>
+                <div class="col-md-9 controls">
+                    <select class="form-control" name="object.style" id="object_style" data-rule-required="true" >
+                        <option value="1" #{if object.style=="1"} selected="selected" #{/if}>公有</option>
+                        <option value="2" #{if object.style=="2"} selected="selected" #{/if}>私有</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group dark">
+                <div class="control-label col-md-3">
+                    <label for="object_description">&{'description'}</label>
+                </div>
+                <div class="col-md-9 controls">
+                    <textarea class="form-control" id="object_description" name="object.description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group dark" id="styleGroup" style="display: none">
+                <div class="control-label col-md-3">
+                    <label for="object_profiles">请选择供货商</label>
+                </div>
+                <div class="col-md-9 controls">
+                    <select class='form-control' multiple placeholder='请选择供货商' id="object_profiles" name="object.profiles.id">
+                        #{list items:profiles, as:'profile'}
+                        %{
+                            def index=0
+                            def materials = new Object[profile.materials.size()]
+                            }%
+                            #{list items: profile.materials, as:'material'}
+                            %{
+                                materials[index]=material.name
+                                index++
+                                }%
+                            #{/list}
+                            <option value='${profile.id}' #{if object.profiles.contains(profile)}selected="selected" #{/if}>${profile.name} - ${materials.join(",")}</option>
+                        #{/list}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row hidden">
+        <div class="form-group dark" id="styleGroup" style="display: none">
+            <div class="control-label col-md-3">
+                <label for="object_specifications">规格型号</label>
+            </div>
+            <div class="col-md-9 controls">
+                <select class='form-control' multiple id="object_specifications" name="object.specifications.id">
+                    #{list items: object.specifications, as:'spec'}
+                        <option value="${spec.id}" selected="selected">${spec.id}</option>
+                    #{/list}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    #{crud.form}
+
+
+    #{/crud.form}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-primary">
+                <table class="table table-bordered" id="specTable">
+                    <thead>
+                    <th>物资类型</th>
+                    <th>需求单位</th>
+                    <th>型号</th>
+                    <th>采购量</th>
+                    <th>单位</th>
+                    <th>到货时间</th>
+                    <th>属性</th>
+
+                    <th></th>
+                    </thead>
+                    <tbody>
+                        #{list items: object.specifications,as:'spec'}
+                            <tr>
+                                <td>${spec.material.name}</td>
+                                <td>${spec.company}</td>
+                                <td>${spec.specification}</td>
+                                <td>${spec.amount}</td>
+                                <td>${spec.unit}</td>
+                                <td>${spec.arrival_time}</td>
+                                <td>
+                                    #{list spec.properties,as:'prop'}
+                                        ${prop.name}:${prop.value}<br>
+                                    #{/list}
+                                </td>
+                                <td><a data-toggle="modal" href="/Vender/editSpec?id=${spec.id}" data-target="#editSpecModal"><i class="fa fa-edit"></i></a><a href="javascript:removeSpec('${spec.id}')"><i class="fa fa-times"></i></a></td>
+                            </tr>
+                        #{/list}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+    <div class="form-actions" style="margin-bottom: 0">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+                <button type="submit" class="btn btn-primary btn-sm" name="_save"><i class="fa fa-save"></i>&nbsp;&nbsp;&{'crud.save', type.modelName}</button>
+                <button type="submit" class="btn btn-primary btn-sm" name="_saveAndContinue"><i class="fa fa-edit"></i>&nbsp;&nbsp;&{'crud.saveAndContinue', type.modelName}</button>
+                <a class="btn btn-danger btn-sm" href="@{delete(object._key())}">&{'crud.delete', type.modelName}</a>
+            </div>
+        </div>
+    </div>
+#{/form}
+
+
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+    $("#object_name").attr("required","true");
+    $("#object_name").attr("required","true");
+    $('#object_style').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if(valueSelected==2){
+            $("#styleGroup").show();
+        }else{
+
+            $("#styleGroup").hide();
+        }
+    });
+
+    #{if object.style=="2"}
+        $("#styleGroup").show();
+    #{/if}
+
+
+    $('.remove-property').live('click', function() {
+        $(this).closest('li').remove();
+        $.get("/Vender/removeProperty?id="+$(this).attr("id"), function(data){
+            $("select#object_properties option").filter("[value='"+data+"']").remove();
+
+        });
+    });
+
+    var table = $("#specTable").dataTable();
+    $('.dataTables_length>label>.form-control').select2().change(function(){
+        $(this).valid();
+    });
+
+    $("#specTable tbody tr").live('click', function( e ) {
+        if ( $(this).hasClass('row_selected') ) {
+            $(this).removeClass('row_selected');
+        }
+        else {
+            table.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
+    });
+
+    $("#propSave").live('click', function(e){
+        var name = $("#object_property").val();
+        var value = $("#object_property_value").val();
+
+        var filter = $("select#object_properties option").filter("[name='"+name+"']");
+        if(name!='其他' && filter.length>0){
+            alert("您已经输入您选择的属性");
+            return false;
+        }
+        if(value==""){
+            alert("请输入属性对应的值");
+            return false;
+        }
+
+        $.post("@{Vender.postProperty}",{name: name, value: value}, function(data){
+
+            var html = "<li class=\"list-group-item no-border-hr no-border-b padding-xs-hr\">"+name+":"+value+" <span class=\"label pull-right remove-property\" id='"+data+"'><a href=\"#\" >删除</a></span></li>";
+            $("#propertyList").append(html);
+            $("#object_properties").append('<option value="'+data+'" name="'+name+'" selected="selected">'+name+'</option>');
+            $("#object_property_value").val("");
+        });
+
+        return false;
+    });
+
+    function removeSpec(id){
+        var anSelected = table.$('tr.row_selected');
+        if ( anSelected.length !== 0 ) {
+            table.fnDeleteRow(anSelected);
+        }
+        $.get("/Vender/removeSpec?id="+id, function(data){
+            $("select#object_specifications option").filter("[value='"+data+"']").remove();
+
+        });
+    }
+
+    $('#object_profiles').select2({ placeholder: '请选择供应商...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_material').select2({ placeholder: '请选择物资类型...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_property').select2({ placeholder: '请选择属性...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_image').pixelFileInput({ placeholder: '选择附件...' });
+
+    $("#requestForm").validate();
+
+
+    $("#specForm").validate();
+    $("#specSave").live('click',function(){
+        $("#specForm").validate();
+
+        $("#specForm").ajaxSubmit({
+            dataType:'json',
+            success: function(data,statusText, xhr, $form){
+                $("#specModal").modal('hide');
+                $("#specForm")[0].reset();
+                $( "#propertyList" ).find( "li").remove();
+                $( "#object_properties" ).find( "option").remove();
+                $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
+                var prop = "";
+                $.each(data.properties, function(i, item) {
+                    prop+=item.name+":"+item.value+"<br />";
+                });
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> &nbsp;<a href="#"><i class="fa fa-times"></i></a>']);
+            }
+        });
+
+
+    });
+
+    $("#editSpecForm").validate();
+    $("#editSpecSave").live('click',function(){
+        $("#editSpecForm").validate();
+
+        var anSelected = table.$('tr.row_selected');
+
+        $("#editSpecForm").ajaxSubmit({
+            dataType:'json',
+            success: function(data,statusText, xhr, $form){
+                $("#editSpecModal").modal('hide');
+                if ( anSelected.length !== 0 ) {
+                    table.fnDeleteRow(anSelected);
+                }
+                var prop = "";
+                $.each(data.properties, function(i, item) {
+                    prop+=item.name+":"+item.value+"<br />";
+                });
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> &nbsp;<a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+            }
+        });
+
+
+    });
+
+    $("#impSpecSave").live('click',function(){
+        $("#impSpecForm").validate();
+
+        $("#impSpecForm").ajaxSubmit({
+            dataType:'json',
+            success: function(datas,statusText, xhr, $form){
+                $("#impSpecModal").modal('hide');
+                $("#impSpecForm")[0].reset();
+                $.each(datas, function(d, data){
+                    $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
+                    var prop = "";
+                    $.each(data.properties, function(i, item) {
+                        prop+=item.name+":"+item.value+"<br />";
+                    });
+                    table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a><a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+                });
+            }
+        });
+
+
+    });
+
+    jQuery('#object_starttime').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            this.setOptions({
+                minDate:0,
+                minTime:0,
+                maxDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false
+            })
+        }
+    });
+    jQuery('#object_stoptime').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            var date = jQuery('#object_starttime').val();
+            this.setOptions({
+                minDate:jQuery('#object_starttime').val()?jQuery('#object_starttime').val():false,
+                minTime:date.substring(11)
+            })
+        }
+    });
+    $('#object_arrival_time').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            var date = jQuery('#object_stoptime').val();
+            this.setOptions({
+                minDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false,
+                minTime:date.substring(11)
+            })
+        },
+        timepicker:false
+    });
+
+
+</script>

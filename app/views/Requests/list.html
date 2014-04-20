@@ -17,13 +17,19 @@
 	<div class="col-sm-12">
 		<div class="box">
 			<div class="box-content box-padding">
-				#{crud.table fields:['name','status','stoptime','operator']}
+				#{crud.table fields:['name','status','starttime','stoptime','operator']}
+                    #{crud.custom 'name'}
+                        <a href="@{view(object._key())}">${object.name?.raw() ?: '(no value)'}</a>
+                    #{/crud.custom}
 				    #{crud.custom 'status'}
                         #{if object.status==0}
-                            <label class="label label-info">招标中</label>
+                            <label class="label label-primary">招标中</label>
                         #{/if}
                         #{elseif object.status==2}
                             <label class="label label-warning">再次竞价中</label>
+                        #{/elseif}
+                        #{elseif object.status==3}
+                            <label class="label label-info">等待招标中...</label>
                         #{/elseif}
                         #{else}
                             <label class="label label-success">招标结束</label>
@@ -34,7 +40,7 @@
                             <a href="@{Vender.tbList(object.id)}" class="btn btn-xs btn-info">查看投标信息</a>
                         #{/if}
                         #{else}
-                            <a href="#" class="btn btn-xs btn-link">请等待开标</a>
+                            <a href="#" class="btn btn-xs btn-link">请等待招标结束</a>
                         #{/else}
                     #{/crud.custom}
                 #{/crud.table}

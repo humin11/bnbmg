@@ -21,6 +21,11 @@ public class Bootstrap extends Job {
                 req.status = 1;
                 req.save();
             }
+
+            if(req.starttime.getTime()<=new Date().getTime()){
+                req.status = 0;
+                req.save();
+            }
         }
 
     }

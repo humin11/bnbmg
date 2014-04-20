@@ -1,13 +1,19 @@
 package controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import com.csvreader.CsvReader;
 import models.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Row;
 import play.db.jpa.Blob;
 import play.i18n.Messages;
 import play.libs.MimeTypes;
@@ -15,6 +21,35 @@ import play.mvc.Controller;
 import utils.SendMessage;
 
 public class Vender extends Controller {
+
+    public static void editSpec(Long id){
+        Specification spec = null;
+        if(id!=null)
+            spec = Specification.findById(id);
+        List<Material> materials = Material.findAll();
+        String  username = session.get("username");
+        if(username!=null){
+
+            User user = User.getByUserName(username);
+            if(user.role.name.equalsIgnoreCase("operator") ) {
+                materials = user.materials;
+            }
+        }
+        render(spec, materials);
+    }
+
+    public static void newSpec(){
+        List<Material> materials = Material.findAll();
+        String  username = session.get("username");
+        if(username!=null){
+
+            User user = User.getByUserName(username);
+            if(user.role.name.equalsIgnoreCase("operator") ) {
+                materials = user.materials;
+            }
+        }
+        render(materials);
+    }
 
 	public static void register(){
 	
@@ -55,9 +90,28 @@ public class Vender extends Controller {
     public static void removeProperty(){
         String id = params.get("id");
         Prop p = Prop.findById(Long.valueOf(id));
+        List<Specification> specifications = Specification.em().createQuery("select r from Specification r join fetch r.properties s where s.id="+Long.valueOf(id), Specification.class).getResultList();
 
+        for(Specification spec: specifications){
+            spec.properties.remove(p);
+            spec.save();
+        }
         if(p!=null)
             p.delete();
+        renderText(id);
+    }
+
+    public static void removeSpec(){
+        String id = params.get("id");
+        Specification spec = Specification.findById(Long.valueOf(id));
+        List<Request> requests = Request.em().createQuery("select r from Request r join fetch r.specifications s where s.id="+Long.valueOf(id), Request.class).getResultList();
+
+        for(Request req: requests){
+            req.specifications.remove(spec);
+            req.save();
+        }
+        if(spec!=null)
+            spec.delete();
         renderText(id);
     }
 
@@ -323,18 +377,80 @@ public class Vender extends Controller {
     public static void impSpec(File file){
         if(file!=null){
             List<Specification> specifications = new ArrayList<Specification>();
+            Specification spec = null;
+            Material material = null;
             try{
-                FileReader input = new FileReader(file);
-                CsvReader reader = new CsvReader(input);
-                reader.readHeaders();
-                while(reader.readRecord()){
-                    String materialName = reader.getValues()[0];
-                    String specification = reader.getValues()[1];
-                    String number = reader.getValues()[2];
-                    String unit = reader.getValues()[3];
-                    String company = reader.getValues()[4];
-                    String date = reader.getValues()[5];
+                FileInputStream fileInputStream = new FileInputStream(file);
+                HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+                HSSFSheet worksheet = workbook.getSheetAt(0);
+                HSSFRow row = null;
+                HSSFCell cell = null;
+                Map<Integer, String> headerMap = new HashMap<Integer, String>();
+                Prop prop = null;
+                if(worksheet.getLastRowNum()>0){
+                    row = worksheet.getRow(0);
+                    for(int i=0; i< row.getLastCellNum(); i++){
+                        headerMap.put(Integer.valueOf(i), row.getCell(i).getStringCellValue());
+                    }
                 }
+                for(int i=1; i<worksheet.getLastRowNum();i++){
+                    row = worksheet.getRow(i);
+                    cell = row.getCell(0);
+                    String materialName = cell.getStringCellValue();
+
+                    cell = row.getCell(1);
+                    String specification = cell.getStringCellValue();
+
+                    cell = row.getCell(2);
+                    Double number = cell.getNumericCellValue();
+
+                    cell = row.getCell(3);
+                    String unit = cell.getStringCellValue();
+
+                    cell = row.getCell(4);
+                    String company = cell.getStringCellValue();
+
+                    cell = row.getCell(5);
+                    Date date = cell.getDateCellValue();
+
+                    cell = row.getCell(6);
+                    String description = cell.getStringCellValue();
+
+                    spec = new Specification();
+
+                    for(int x=7; x< row.getLastCellNum(); x++){
+                        cell = row.getCell(x);
+                        String value = "";
+                        System.out.println(cell.getCellType() + "*********" + Cell.CELL_TYPE_FORMULA);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(cell.getNumericCellValue());
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        prop = new Prop();
+                        prop.name = headerMap.get(x);
+                        prop.value = value;
+                        prop.save();
+                        spec.properties.add(prop);
+                    }
+
+                    spec.name = specification;
+                    spec.specification = specification;
+                    if (number != null && !"".equals(number))
+                        spec.amount = number;
+                    spec.unit = unit;
+                    spec.company = company;
+                    if (materialName != null && !"".equals(materialName)) {
+                        material = Material.find("name=?", materialName.trim()).first();
+                        spec.material = material;
+                    }
+                    spec.arrival_time = date;
+                    spec.description = description;
+                    spec.save();
+                    specifications.add(spec);
+                }
+
+                renderJSON(specifications);
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -342,109 +458,272 @@ public class Vender extends Controller {
     }
 
     public static void imp(File file){
+        String result="";
+        String profiles="";
+        int imported=0;
+        int missed=0;
+
         if (file != null) {
+
+
+            FileInputStream fileInputStream = null;
+            HSSFWorkbook workbook = null;
             try {
-                FileReader input = new FileReader(file);
-                CsvReader reader = new CsvReader(input);
-                reader.readHeaders();
-                Profile profile = null;
+                fileInputStream = new FileInputStream(file);
+                workbook = new HSSFWorkbook(fileInputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Profile profile = null;
                 User user = null;
                 String value="";
                 Material material = null;
-                String unit = "万元";
-                String business = "0";
+
                 SendMessage m = new SendMessage();
-                while (reader.readRecord()) {
-                    if (reader.getValues().length < 22) {
-                        continue;
-                    }
-                    value = reader.getValues()[0];
-                    user = User.find("username=?", value).first();
-                    if(user == null){
-                        user = new User(value, getRandomPwd(),ApplicationRole.getByName("user"));
-                        user.save();
+                for(int x=0;x<workbook.getNumberOfSheets();x++){
+
+                    HSSFSheet worksheet = workbook.getSheetAt(x);
+                    HSSFRow row = null;
+                    HSSFCell cell = null;
+                    DecimalFormat df = new DecimalFormat("#");
+                    df.setMaximumFractionDigits(0);
+
+                    for(int i=1; i<worksheet.getLastRowNum();i++) {
+                        String unit = "万元";
+                        String business = "0";
+                        try {
+                        row = worksheet.getRow(i);
+                        if(row.getLastCellNum()<22){
+                            continue;
+                        }
+                        cell = row.getCell(0);
+                        value = cell.getStringCellValue();
+                        user = User.find("username=?", value).first();
+                        if(user == null){
+                            user = new User(value, getRandomPwd(),ApplicationRole.getByName("user"));
+                            user.save();
+                        }
+
+                        profile = Profile.find("user.id=?", user.id).first();
+                        if(profile == null){
+                            profile = new Profile();
+                            profile.user=user;
+                        }
+
+                        cell = row.getCell(1);
+                        value = cell.getStringCellValue();
+                        profile.name = value;
+
+                        cell = row.getCell(2);
+                        value = cell.getStringCellValue();
+                        material = Material.find("name=?",value).first();
+                        if(material == null){
+                            material = new Material();
+                            material.name = value;
+                            material.save();
+
+                        }
+                        if(!profile.materials.contains(material))
+                            profile.materials.add(material);
+
+                        cell = row.getCell(3);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+
+                        cell = row.getCell(4);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+
+                        cell = row.getCell(5);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.registration_number = value;
+
+                        cell = row.getCell(6);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            df.setMaximumFractionDigits(2);
+                            value = String.valueOf(df.format(cell.getNumericCellValue()));
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        if(value.contains("美元")){
+                            value = value.replace("（美元）","").trim();
+                            unit = "万美元";
+                        }
+                        profile.registration_assets = value;
+                        profile.registration_assets_unit=unit;
+
+
+                        df.setMaximumFractionDigits(0);
+                        cell = row.getCell(7);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.registration_address = value;
+
+                        cell = row.getCell(8);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.bank_name = value;
+
+                        cell = row.getCell(9);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.account_name = value;
+
+                        cell = row.getCell(10);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(cell.getNumericCellValue());
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        profile.tfn = value;
+
+                        cell = row.getCell(11);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(cell.getNumericCellValue());
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        profile.factory_name = value;
+
+                        cell = row.getCell(12);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.factory_address = value;
+
+                        cell = row.getCell(13);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(df.format(cell.getNumericCellValue()));
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        profile.first_supply = value.replaceAll("年","");
+
+                        cell = row.getCell(14);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.legal_person = value;
+
+                        cell = row.getCell(15);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.contact_name = value;
+
+                        cell = row.getCell(16);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.contact_job = value;
+
+
+                        cell = row.getCell(17);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(df.format(cell.getNumericCellValue()));
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        profile.contact_phone = value;
+
+                        cell = row.getCell(18);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.sales_name = value;
+
+                        cell = row.getCell(19);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        profile.sales_job = value;
+
+                        cell = row.getCell(20);
+                        if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                            value = String.valueOf(df.format(cell.getNumericCellValue()));
+                        }else {
+                            value = cell.getStringCellValue();
+                        }
+                        profile.sales_phone = value;
+
+                        cell = row.getCell(21);
+                            if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
+                                value = String.valueOf(cell.getNumericCellValue());
+                            }else {
+                                value = cell.getStringCellValue();
+                            }
+                        if(value.equals("自营")){
+                            business = "1";
+                        } else if(value.equals("经销")){
+                            business = "2";
+                        } else if(value.equals("挂靠")){
+                            business = "3";
+                        } else {
+                            business = "0";
+                        }
+                        profile.business_model = business;
+                            profile.save();
+                            imported+=1;
+
+                        m.sendSms(profile.contact_phone,"您的信息已导入,用户名:"+user.username+",密码:"+user.password+"，请登录比价平台上传资质文件","000001");
+                        } catch (Exception e) {
+                            missed+=1;
+                            if(!"".equals(profiles)){
+                                profiles+=","+profile.name;
+                            }else{
+                                profiles+=profile.name;
+                            }
+                            e.printStackTrace();
+                        }
+
                     }
 
-                    profile = Profile.find("user.id=?", user.id).first();
-                    if(profile == null){
-                        profile = new Profile();
-                        profile.user=user;
-                    }
-                    value = reader.getValues()[1];
-                    profile.name=value;
-                    value = reader.getValues()[2];
-                    material = Material.find("name=?",value).first();
-                    if(material == null){
-                        material = new Material();
-                        material.name = value;
-                        material.save();
 
-                    }
 
-                    if(!profile.materials.contains(material))
-                        profile.materials.add(material);
-                    value = reader.getValues()[3];
-
-                    value = reader.getValues()[4];
-                    //profile.business_model = value;
-                    value = reader.getValues()[5];
-                    profile.registration_number = value;
-                    value = reader.getValues()[6];
-                    if(value.contains("（美元）")){
-                        value = value.replace("（美元）","").trim();
-                        unit = "万美元";
-                    }
-                    profile.registration_assets = value;
-                    profile.registration_assets_unit=unit;
-                    value = reader.getValues()[7];
-                    profile.registration_address = value;
-                    value = reader.getValues()[8];
-                    profile.bank_name = value;
-                    value = reader.getValues()[9];
-                    profile.account_name = value;
-                    value = reader.getValues()[10];
-                    profile.tfn = value;
-                    value = reader.getValues()[11];
-                    profile.factory_name = value;
-                    value = reader.getValues()[12];
-                    profile.factory_address = value;
-                    value = reader.getValues()[13];
-                    profile.first_supply = value;
-                    value = reader.getValues()[14];
-                    profile.legal_person = value;
-                    value = reader.getValues()[15];
-                    profile.contact_name = value;
-                    value = reader.getValues()[16];
-                    profile.contact_job = value;
-                    value = reader.getValues()[17];
-                    profile.contact_phone = value;
-                    value = reader.getValues()[18];
-                    profile.sales_name = value;
-                    value = reader.getValues()[19];
-                    profile.sales_job = value;
-                    value = reader.getValues()[20];
-                    profile.sales_phone = value;
-                    value = reader.getValues()[21];
-                    if(value.equals("自营")){
-                        business = "1";
-                    } else if(value.equals("经销")){
-                        business = "2";
-                    } else if(value.equals("挂靠")){
-                        business = "3";
-                    } else {
-                        business = "0";
-                    }
-                    profile.business_model = business;
-                    profile.save();
-
-                    m.sendSms(profile.contact_phone,"您的信息已导入,用户名:"+user.username+",密码:"+user.password+"，请登录比价平台上传资质文件","000001");
                 }
-            } catch (Exception e) {
 
+
+
+            result="成功导入"+imported+"条记录，丢失"+missed+"条记录。";
+            if(!"".equals(profiles)){
+                result+="丢失导入的供应商为:"+profiles;
             }
-
         }
-        redirect("/admin/profiles");
+        redirect("/admin/profiles?result="+ URLEncoder.encode(result));
     }
 
 }

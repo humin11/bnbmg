@@ -1,0 +1,42 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.blank.title', type.modelName) /}
+
+<div id="crudBlank" class="${type.name}">
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
+			</h1>
+
+		</div>
+	</div>
+</div>
+    <div class="objectForm">
+		#{form action:@create(), enctype:'multipart/form-data', class:'form form-horizontal validate-form'}
+        #{crud.form}
+
+        #{/crud.form}
+		<div class="form-actions" style="margin-bottom: 0">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary btn-sm" name="_save"><i class="fa fa-save"></i>&nbsp;&nbsp;&{'crud.save', type.modelName}</button>
+                    <button type="submit" class="btn btn-primary btn-sm" name="_saveAndContinue"><i class="fa fa-edit"></i>&nbsp;&nbsp;&{'crud.saveAndContinue', type.modelName}</button>
+                    <button type="submit" class="btn btn-primary btn-sm" name="_saveAndAddAnother"><i class="fa fa-plus"></i>&nbsp;&nbsp;&{'crud.saveAndAddAnother', type.modelName}</button>
+                </div>
+			</div>
+		</div>
+    #{/form}
+    </div>
+
+</div>
+
+<script>
+    $('#object_materials').select2({ placeholder: '请选择物资类型...' }).change(function(){
+        $(this).valid();
+    });
+
+    $("#object_role").select2({ placeholder: '请选择用户权限...' }).change(function(){
+        $(this).valid();
+    });
+</script>

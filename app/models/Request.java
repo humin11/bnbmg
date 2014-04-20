@@ -46,8 +46,9 @@ public class Request extends Model {
     // 0 - Toubiaoing
     // 1 - Already Toubiao
     // 2 - Toubiao Again
+    // 3 - Not start
     @CRUD.Exclude
-    public int status = 0;
+    public int status = 3;
 
     @CRUD.Exclude
     public Boolean is_finished=false;

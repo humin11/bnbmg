@@ -10,132 +10,85 @@
 				<i class="icon-ok"></i> <span>&{'crud.blank.title', type.modelName}</span>
 			</h1>
             <div class="pull-right">
-                <button class="btn btn-sm btn-labeled btn-info" data-toggle="modal" data-target="#specModal"><span class="btn-label icon fa fa-cloud-upload"></span>&{'spec.upload'}</button>
-                <button class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</button>
+                <button class="btn btn-sm btn-labeled btn-info" data-toggle="modal" data-target="#impSpecModal"><span class="btn-label icon fa fa-cloud-upload"></span>&{'spec.upload'}</button>
+                <a class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" href="@{Vender.newSpec()}" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</a>
             </div>
 		</div>
 	</div>
 </div>
 
-    <!-- Modal -->
-    <div id="specModal" class="modal fade" tabindex="-1" role="dialog" >
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">添加采购规格</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form form-horizontal validate-form" method="post" action="@{Specs.create()}" id="specForm" name="specForm"  enctype="multipart/form-data">
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'specification'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_specification" name="object.specification" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'spec.company'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_company" name="object.company" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'material'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <select class='form-control' placeholder='请选择物资类型' id="object_material" data-rule-required="true" name="object.material.id">
-                                #{list items:materials, as:'material'}
-                                    <option value='${material.id}'>${material.name}</option>
-                                #{/list}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'属性'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                 <div class="row">
-                                        <div class="col-md-5">
-                                            <select class='form-control' placeholder='请选择属性' id="object_property" name="object.property">
-                                                <option value="厚度">厚度</option>
-                                                <option value="宽度">宽度</option>
-                                                <option value="高度">高度</option>
-                                                <option value="克重">克重</option>
-                                                <option value="上锌量">上锌量</option>
-                                                <option value="其他">其他</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input class="form-control" type="text" id="object_property_value" name="object_property_value">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button class="btn btn-success" id="propSave" >&{'crud.add',''}</button>
-                                        </div>
-                                    </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <ul class="list-group no-margin" id="propertyList">
+<!-- Modal -->
+<div id="specModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">编辑采购规格</h4>
+            </div>
+            <div class="modal-body">
 
-                                        </ul>
-                                    </div>
-                                    <select class='form-control hide' multiple id="object_properties" name="object.properties.id">
-
-                                    </select>
-                                </div>
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
 
 
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'amount'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_amount" name="object.amount" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'unit'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_unit" name="object.unit" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'arrival_time'}(*)</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" data-rule-required="true" id="object_arrival_time" name="object.arrival_time" type="text" value="" />
-                            </div>
-                        </div>
-                        <div class="form-group dark">
-                            <div class="control-label col-md-3">
-                                <label for="validation_name">&{'description'}</label>
-                            </div>
-                            <div class="col-md-9 controls">
-                                <input class="form-control" id="object_description" name="object.description" type="text" value="" />
-                            </div>
-                        </div>
+<!-- Modal -->
+<div id="editSpecModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myEditModalLabel">编辑采购规格</h4>
+            </div>
+            <div class="modal-body">
+
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="editSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
 
 
-                    </form>
-                </div> <!-- / .modal-body -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
-                    <button type="submit" class="btn btn-primary" id="specSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
-                </div>
-            </div> <!-- / .modal-content -->
-        </div> <!-- / .modal-dialog -->
-    </div> <!-- /.modal -->
-    <!-- / Modal -->
+<!-- Modal -->
+<div id="impSpecModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myImpModalLabel">导入采购规格</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form form-horizontal validate-form" method="post" action="@{Vender.impSpec()}" id="impSpecForm" name="impSpecForm"  enctype="multipart/form-data">
+
+                    <div class="form-group dark">
+                        <div class="control-label col-md-3">
+                            <label for="validation_name">&{'file.imp'}</label>
+                        </div>
+                        <div class="col-md-9 controls">
+                            <input class="form-control" id="file" name="file" type="file" value="" />
+                        </div>
+                    </div>
+
+                </form>
+            </div> <!-- / .modal-body -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+                <button type="submit" class="btn btn-primary" id="impSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div> <!-- /.modal -->
+<!-- / Modal -->
 
 
     <div class="objectForm">
@@ -285,18 +238,41 @@
     });
 
 
-    $('.remove-property').live('click', function() {
-        $(this).closest('li').remove();
-        $.get("/Vender/removeProperty?id="+$(this).attr("id"), function(data){
-            $("select#object_properties option").filter("[value='"+data+"']").remove();
-
-        });
-    });
 
     var table = $("#specTable").dataTable();
     $('.dataTables_length>label>.form-control').select2().change(function(){
         $(this).valid();
     });
+
+    $("#specTable tbody tr").live('click', function( e ) {
+        if ( $(this).hasClass('row_selected') ) {
+            $(this).removeClass('row_selected');
+        }
+        else {
+            table.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
+    });
+
+    $('.remove-property').live('click', function() {
+        $(this).closest('li').remove();
+        $.get("/Vender/removeProperty?id="+$(this).attr("id"), function(data){
+            $("select#object_properties option").filter("[value='"+data+"']").remove();
+
+
+        });
+    });
+
+    function removeSpec(id){
+        var anSelected = table.$('tr.row_selected');
+        if ( anSelected.length !== 0 ) {
+            table.fnDeleteRow(anSelected);
+        }
+        $.get("/Vender/removeSpec?id="+id, function(data){
+            $("select#object_specifications option").filter("[value='"+data+"']").remove();
+
+        });
+    }
 
     $("#propSave").live('click', function(e){
         var name = $("#object_property").val();
@@ -338,7 +314,6 @@
     });
 
     $('#object_image').pixelFileInput({ placeholder: '选择附件...' });
-    $('#object_arrival_time').datetimepicker({ format:'Y-m-d H:i' });
 
     $("#requestForm").validate();
 
@@ -359,11 +334,89 @@
                 $.each(data.properties, function(i, item) {
                     prop+=item.name+":"+item.value+"<br />";
                 });
-                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'']);
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
             }
         });
 
 
+    });
+
+    $("#editSpecForm").validate();
+    $("#editSpecSave").live('click',function(){
+        $("#editSpecForm").validate();
+
+        var anSelected = table.$('tr.row_selected');
+
+        $("#editSpecForm").ajaxSubmit({
+            dataType:'json',
+            success: function(data,statusText, xhr, $form){
+                $("#editSpecModal").modal('hide');
+                if ( anSelected.length !== 0 ) {
+                    table.fnDeleteRow(anSelected);
+                }
+                var prop = "";
+                $.each(data.properties, function(i, item) {
+                    prop+=item.name+":"+item.value+"<br />";
+                });
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+            }
+        });
+
+
+    });
+
+    $("#impSpecSave").live('click',function(){
+        $("#impSpecForm").validate();
+
+        $("#impSpecForm").ajaxSubmit({
+            dataType:'json',
+            success: function(datas,statusText, xhr, $form){
+                $("#impSpecModal").modal('hide');
+                $("#impSpecForm")[0].reset();
+                $.each(datas, function(d, data){
+                    $("#object_specifications").append('<option value="'+data.id+'" selected="selected">'+data.id+'</option>');
+                    var prop = "";
+                    $.each(data.properties, function(i, item) {
+                        prop+=item.name+":"+item.value+"<br />";
+                    });
+                    table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a><a href="#"><i class="fa fa-times"></i></a>']);
+                });
+            }
+        });
+
+
+    });
+
+    jQuery('#object_starttime').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            this.setOptions({
+                minDate:0,
+                minTime:0,
+                maxDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false
+            })
+        }
+    });
+    jQuery('#object_stoptime').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            var date = jQuery('#object_starttime').val();
+            this.setOptions({
+                minDate:jQuery('#object_starttime').val()?jQuery('#object_starttime').val():false,
+                minTime:date.substring(11)
+            })
+        }
+    });
+    $('#object_arrival_time').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            var date = jQuery('#object_stoptime').val();
+            this.setOptions({
+                minDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false,
+                minTime:date.substring(11)
+            })
+        },
+        timepicker:false
     });
 
 

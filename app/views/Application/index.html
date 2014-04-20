@@ -15,6 +15,20 @@
 *{</div>}*
 #{/deadbolt.restrict}
 
+
+#{deadbolt.restrict roles:[['operator']]}
+<div class="panel">
+    <div class="panel-heading">
+        <span class="panel-title">与我相关的物资类型</span>
+    </div>
+    <div class="panel-body buttons-with-margins">
+        #{list items: user.materials,as:'material'}
+            <button class="btn btn-primary btn-rounded">${material.name}</button> &nbsp;&nbsp;
+        #{/list}
+    </div>
+</div>
+#{/deadbolt.restrict}
+
 #{deadbolt.restrict roles:[['superadmin'],['admin'],['system']] }
 <div class="row">
     <div class="col-sm-12">
@@ -162,10 +176,13 @@
                         <td>
 
                             #{if request.status==0}
-                                <label class="label label-info">招标中</label>
+                                <label class="label label-primary">招标中</label>
                             #{/if}
                             #{elseif request.status==2}
                                 <label class="label label-warning">再次竞价</label>
+                            #{/elseif}
+                            #{elseif request.status==3}
+                                <label class="label label-info">等待招标中...</label>
                             #{/elseif}
                             #{else}
                                 <label class="label label-success">招标结束</label>
@@ -174,7 +191,7 @@
                         #{deadbolt.restrict roles:[['superadmin'],['user']] }
                             <td>
                             %{
-                                if((request.stoptime.getTime()-new Date().getTime())>0){
+                                if((request.stoptime.getTime()-new Date().getTime())>0 && request.starttime.getTime()<=new Date().getTime()){
                                 def user = models.User.getByUserName(session.get('username'));
                                 def profile = models.Profile.find("user.id=?",user.id).first();
                                 def toubiao = models.Toubiao.find("request.id=? and user.name=?", request.id, session.get('username')).first()
@@ -194,9 +211,11 @@
                                 #{else}
                                     <a class="btn btn-success btn-xs" href="#">已投标</a>
                                 #{/else}
-                            %{ } } else {}%
+                            %{ } } else if(request.starttime.getTime()>new Date().getTime()) {}%
+                                <a class="btn btn-link btn-xs" href="#">投标未开始</a>
+                            %{  } else {}%
                                 <a class="btn btn-link btn-xs" href="#">投标已过期</a>
-                             %{}}%
+                            %{}}%
                             </td>
                         #{/deadbolt.restrict}
                     </tr>

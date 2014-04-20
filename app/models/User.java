@@ -17,15 +17,14 @@ package models;
 
 import models.deadbolt.Role;
 import models.deadbolt.RoleHolder;
+import net.sf.oval.constraint.MinLength;
+import play.data.validation.MinSize;
 import play.data.validation.Password;
 import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import controllers.CRUD.Exclude;
 
@@ -48,6 +47,7 @@ public class User extends Model implements RoleHolder
     
     @Password
     @Required
+    @MinSize(6)
     public String password;
 
     @Required
@@ -57,6 +57,9 @@ public class User extends Model implements RoleHolder
     @Exclude
     @OneToOne
     public Profile profile;
+
+    @ManyToMany
+    public List<Material> materials;
 
     public User(String userName,
                 String password,

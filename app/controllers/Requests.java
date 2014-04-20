@@ -27,6 +27,23 @@ import utils.SendMessage;
 @With(Deadbolt.class)
 public class Requests extends CRUD {
 
+    public static void view(Long id){
+        Request object = Request.findById(id);
+        List<Profile> profiles = Profile.findAll();
+        List<Material> materials = Material.findAll();
+        String  username = session.get("username");
+        User user = null;
+        if(username!=null){
+
+            user = User.getByUserName(username);
+
+            if(user.role.name.equalsIgnoreCase("operator") ) {
+                materials = user.materials;
+            }
+        }
+        render(object,user, profiles, materials, user);
+    }
+
     public static void show(String id) throws Exception {
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
@@ -34,8 +51,17 @@ public class Requests extends CRUD {
         notFoundIfNull(object);
         List<Profile> profiles = Profile.findAll();
         List<Material> materials = Material.findAll();
+        String  username = session.get("username");
+        User user = null;
+        if(username!=null){
+
+            user = User.getByUserName(username);
+            if(user.role.name.equalsIgnoreCase("operator") ) {
+                materials = user.materials;
+            }
+        }
         try {
-            render(type, object, profiles,materials);
+            render(type, object, profiles,materials,user);
         } catch (TemplateNotFoundException e) {
             render("CRUD/show.html", type, object, profiles,materials);
         }
@@ -49,6 +75,14 @@ public class Requests extends CRUD {
         Model object = (Model) constructor.newInstance();
         List<Profile> profiles = Profile.findAll();
         List<Material> materials = Material.findAll();
+        String  username = session.get("username");
+        if(username!=null){
+
+            User user = User.getByUserName(username);
+            if(user.role.name.equalsIgnoreCase("operator") ) {
+                materials = user.materials;
+            }
+        }
         try {
             render(type, object,profiles,materials);
         } catch (TemplateNotFoundException e) {
@@ -136,12 +170,12 @@ public class Requests extends CRUD {
         List<Material> materials = Material.findAll();
         if (validation.hasErrors()) {
             renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
-            Map<String, List<Error>> errorMap = validation.errorsMap();
-            for(List<Error> errorList: errorMap.values()){
-                for(Error error: errorList){
-                    System.out.println(error.getKey()+"---"+error.message());
-                }
-            }
+//            Map<String, List<Error>> errorMap = validation.errorsMap();
+//            for(List<Error> errorList: errorMap.values()){
+//                for(Error error: errorList){
+//                    System.out.println(error.getKey()+"---"+error.message());
+//                }
+//            }
             try {
                 render(request.controller.replace(".", "/") + "/blank.html", type, object,profiles,materials);
             } catch (TemplateNotFoundException e) {

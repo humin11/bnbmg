@@ -1,0 +1,156 @@
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myEditModalLabel">编辑采购规格</h4>
+        </div>
+        <div class="modal-body">
+
+            <form class="form form-horizontal validate-form" method="post" action="@{Specs.save(spec.id)}" id="editSpecForm" name="editSpecForm"  enctype="multipart/form-data">
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'specification'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" data-rule-required="true" id="object_specification" name="object.specification" type="text" value="${spec.specification}" />
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'spec.company'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" data-rule-required="true" id="object_company" name="object.company" type="text" value="${spec.company}" />
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'material'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <select class='form-control' placeholder='请选择物资类型' id="object_material" data-rule-required="true" name="object.material.id">
+                        #{list items:materials, as:'material'}
+                            <option value='${material.id}' #{if spec.material.id==material.id}selected="selected" #{/if}>${material.name}</option>
+                        #{/list}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'属性'}</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select class='form-control' placeholder='请选择属性' id="object_property" name="object.property">
+                                    <option value="厚度">厚度</option>
+                                    <option value="宽度">宽度</option>
+                                    <option value="高度">高度</option>
+                                    <option value="克重">克重</option>
+                                    <option value="上锌量">上锌量</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" id="object_property_value" name="object_property_value">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success" id="propSave" >&{'crud.add',''}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="list-group no-margin" id="propertyList">
+                                    #{list spec.properties,as:'prop'}
+                                        <li class="list-group-item no-border-hr no-border-b padding-xs-hr">${prop.name}:${prop.value}<span class="label pull-right remove-property" id='${prop.id}'><a href="#" >删除</a></span></li>
+                                    #{/list}
+                                </ul>
+                            </div>
+                            <select class='form-control hide' multiple id="object_properties" name="object.properties.id">
+                                #{list spec.properties,as:'prop'}
+                                    <option value="${prop.id}" selected="selected">${prop.name}</option>
+                                #{/list}
+                            </select>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'amount'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" data-rule-required="true" id="object_amount" name="object.amount" type="text" value="${spec.amount}" />
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'unit'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" data-rule-required="true" id="object_unit" name="object.unit" type="text" value="${spec.unit}" />
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'arrival_time'}(*)</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" data-rule-required="true" id="object_arrival_time" name="object.arrival_time" type="text" value="${spec.arrival_time}" readonly/>
+                    </div>
+                </div>
+                <div class="form-group dark">
+                    <div class="control-label col-md-3">
+                        <label for="validation_name">&{'description'}</label>
+                    </div>
+                    <div class="col-md-9 controls">
+                        <input class="form-control" id="object_description" name="object.description" type="text" value="${spec.description}" />
+                    </div>
+                </div>
+
+            </form>
+        </div> <!-- / .modal-body -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
+            <button type="submit" class="btn btn-primary" id="editSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
+        </div>
+    </div> <!-- / .modal-content -->
+</div> <!-- / .modal-dialog -->
+
+<script>
+    $('#object_profiles').select2({ placeholder: '请选择供应商...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_material').select2({ placeholder: '请选择物资类型...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_property').select2({ placeholder: '请选择属性...' }).change(function(){
+        $(this).valid();
+    });
+
+    $('#object_image').pixelFileInput({ placeholder: '选择附件...' });
+
+    $('.remove-property').live('click', function() {
+        $(this).closest('li').remove();
+        $.get("/Vender/removeProperty?id="+$(this).attr("id"), function(data){
+            $("select#object_properties option").filter("[value='"+data+"']").remove();
+
+        });
+    });
+
+    $('#object_arrival_time').datetimepicker({
+        format:'Y-m-d H:i',
+        onShow:function( ct ){
+            var date = jQuery('#object_stoptime').val();
+            this.setOptions({
+                minDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false,
+                minTime:date.substring(11)
+            })
+        },
+        timepicker:false
+    });
+</script>

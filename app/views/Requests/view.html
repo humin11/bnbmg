@@ -1,0 +1,115 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
+			</h1>
+            <div class="pull-right">
+                #{if object.status==3}
+                    <a class="btn box-collapse btn-xs btn-warning" href="@{show(object._key())}">&{'edit'}</a>
+                #{/if}
+                #{else }
+                    <a class="btn box-collapse btn-xs btn-default" href="#">&{'edit'}</a>
+                #{/else}
+            </div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td><b>&{'name'}</b></td>
+                    <td>${object.name}</td>
+                    <td><b>&{'style'}</b></td>
+                    <td>
+                        #{if object.style=="1"}
+                            公有
+                        #{/if}
+                        #{else}
+                            私有
+                        #{/else}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>&{'description'}</b></td>
+                    <td>${object.description}</td>
+                    #{if object.style=="2"}
+                    <td><b>&{'supplier.info'}</b></td>
+                    <td>
+                        %{
+                            def index=0
+                            def profiles = new Object[object.profiles.size()]
+                        }%
+                        #{list items: object.profiles, as:'profile'}
+                            %{
+                                profiles[index]=profile.name
+                                index++
+                            }%
+                        #{/list}
+                        ${profiles.join(",")}
+                    </td>
+                    #{/if}
+                </tr>
+                <tr>
+                    <td><b>&{'starttime'}</b></td>
+                    <td>${object.starttime}</td>
+                    <td><b>&{'stoptime'}</b></td>
+                    <td>
+                        ${object.stoptime}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>&{'files'}</b></td>
+                    <td colspan="3">
+                        #{ifnot object.image}
+                            <a class="currentAttachment" href="@{attachment(object.id, 'image')}" target="_blank">${object.image.getFile().getName()}</a>
+                        #{/ifnot}
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+	</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-primary">
+            <table class="table table-bordered" id="specTable">
+                <thead>
+                <th>物资类型</th>
+                <th>需求单位</th>
+                <th>型号</th>
+                <th>采购量</th>
+                <th>单位</th>
+                <th>到货时间</th>
+                <th>属性</th>
+
+
+                </thead>
+                <tbody>
+                    #{list items: object.specifications, as:'spec'}
+                    <tr>
+                        <td>${spec.material.name}</td>
+                        <td>${spec.company}</td>
+                        <td>${spec.specification}</td>
+                        <td>${spec.amount}</td>
+                        <td>${spec.unit}</td>
+                        <td>${spec.arrival_time}</td>
+                        <td>
+                            #{list spec.properties, as:'prop'}
+                                ${prop.name}:${prop.value}<br/>
+                            #{/list}
+                        </td>
+
+                    </tr>
+                    #{/list}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
