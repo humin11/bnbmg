@@ -17,6 +17,13 @@ spec.import=导入采购规格
 Material=物资类型
 Materials=物资类型管理
 
+system.config=系统配置
+notification.config=消息配置
+Config=系统设置
+msg_import=导入用户消息
+msg_request_invite=邀请投标消息
+msg_request_notification=中标通知消息
+
 status=状态
 operator=操作
 

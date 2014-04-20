@@ -1,6 +1,10 @@
 package utils;
 
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 import org.joda.time.DateTime;
+import play.i18n.Messages;
+import play.libs.Mail;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -75,4 +79,19 @@ public class SendMessage {
         }
 
     }
+
+    public void sendMail(String email, String subject, String message) {
+        SimpleEmail mail = new SimpleEmail();
+        try {
+            mail.setFrom(Messages.get("application.name"));
+            mail.addTo(email);
+            mail.setSubject(subject);
+            mail.setMsg(message);
+            Mail.send(mail);
+        } catch (EmailException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

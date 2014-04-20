@@ -1,0 +1,28 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="page-header">
+			<h1 class="pull-left">
+				<i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
+			</h1>
+
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		#{form action:@save(object._key()), enctype:'multipart/form-data', class:'form form-horizontal validate-form'}
+	        #{crud.form /}
+	        <div class="form-actions" style="margin-bottom: 0">
+				<div class="row">
+					<div class="col-sm-9 col-sm-offset-3">
+	            		<input type="submit" class="btn btn-primary btn-sm" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+
+	        		</div>
+	        	</div>
+	        </div>
+	    #{/form}
+	</div>
+</div>

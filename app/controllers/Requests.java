@@ -184,16 +184,7 @@ public class Requests extends CRUD {
         }
         object._save();
         Request req = (Request)object;
-        List<Profile> profileList = null;
-        if(req.profiles==null || req.profiles.size()==0){
-            profileList = Profile.findAll();
-        }else{
-            profileList = req.profiles;
-        }
-        SendMessage m = new SendMessage();
-        for(Profile p: profileList){
-            m.sendSms(p.contact_phone,req.name+"正在招标，欢迎参与","0000003");
-        }
+
         flash.success(play.i18n.Messages.get("crud.created", type.modelName));
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");

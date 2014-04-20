@@ -163,8 +163,19 @@ public class Vender extends Controller {
             tb.status="2";
             tb.save();
         }
+        Config config = Config.find("1=1").first();
+        String message="";
         SendMessage m = new SendMessage();
-        m.sendSms(toubiao.profile.contact_phone,"您已中标"+toubiao.request.name+"项目，请按时发货","000002");
+        message="您已中标"+toubiao.request.name+"项目，请按时发货";
+        if(config.msg_request_invite!=null && !"".equals(config.msg_request_invite)){
+            message = config.msg_request_notification.replace("{request}", toubiao.request.name);
+        }
+        Profile p = toubiao.profile;
+        if(p.contact_phone!=null && !"".equals(p.contact_phone))
+             m.sendSms(p.contact_phone,message,"0000003");
+        if(p.contact_email!=null && !"".equals(p.contact_email))
+             m.sendMail(p.contact_email, "["+ Messages.get("application.name")+"]中标通知", message);
+
         redirect("/admin/requests");
     }
 
@@ -465,6 +476,7 @@ public class Vender extends Controller {
 
         if (file != null) {
 
+            Config config = Config.find("1=1").first();
 
             FileInputStream fileInputStream = null;
             HSSFWorkbook workbook = null;
@@ -699,7 +711,16 @@ public class Vender extends Controller {
                             profile.save();
                             imported+=1;
 
-                        m.sendSms(profile.contact_phone,"您的信息已导入,用户名:"+user.username+",密码:"+user.password+"，请登录比价平台上传资质文件","000001");
+                            if(profile.contact_phone!=null) {
+                                String message="您的信息已导入,用户名:"+user.username+",密码:"+user.password+"，请登录比价平台上传资质文件";
+                                if (config.msg_import != null && !"".equals(config.msg_import)) {
+                                    message = config.msg_import.replace("{username}", user.username).replace("{passowrd}", user.password);
+                                }
+                                m.sendSms(profile.contact_phone, message, "0000001");
+                                if(profile.contact_email!=null && !"".equals(profile.contact_phone)){
+                                    m.sendMail(profile.contact_email, "["+Messages.get("application.name")+"]信息导入",message);
+                                }
+                            }
                         } catch (Exception e) {
                             missed+=1;
                             if(!"".equals(profiles)){

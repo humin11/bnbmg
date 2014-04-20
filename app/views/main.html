@@ -202,6 +202,22 @@
             #{deadbolt.restrict roles:[['superadmin'],['system']] }
                 <li class="mm-dropdown">
                     <a href='#'>
+                        <i class='menu-icon fa fa-gears'></i>
+                        <span class="mm-text">&{'system.config'}</span>
+                    </a>
+                    <ul style="display: block">
+                        <li class=''>
+                            <a href='@{Configuration.show()}'>
+                                <i class='menu-icon fa fa-gear'></i>
+                                <span class="mm-text">&{'notification.config'}</span>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </li>
+                <li class="mm-dropdown">
+                    <a href='#'>
                         <i class='menu-icon fa fa-users'></i>
                         <span class="mm-text">&{'user'}</span>
                     </a>
