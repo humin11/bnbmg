@@ -432,7 +432,6 @@ public class Vender extends Controller {
                     for(int x=7; x< row.getLastCellNum(); x++){
                         cell = row.getCell(x);
                         String value = "";
-                        System.out.println(cell.getCellType() + "*********" + Cell.CELL_TYPE_FORMULA);
                         if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC){
                             value = String.valueOf(cell.getNumericCellValue());
                         }else {
