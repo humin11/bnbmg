@@ -1,10 +1,7 @@
 package controllers;
 
 import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import controllers.CRUD.ObjectType;
 import controllers.deadbolt.Deadbolt;
@@ -52,12 +49,17 @@ public class Requests extends CRUD {
         List<Profile> profiles = Profile.findAll();
         List<Material> materials = Material.findAll();
         String  username = session.get("username");
+        List<Long> mIds = new ArrayList<Long>();
         User user = null;
         if(username!=null){
 
             user = User.getByUserName(username);
             if(user.role.name.equalsIgnoreCase("operator") ) {
                 materials = user.materials;
+                for(Material m: materials){
+                    mIds.add(m.id);
+                }
+                profiles = Profile.em().createQuery("select p from Profile p join fetch p.materials m where m.id in :ids").setParameter("ids",mIds).getResultList();
             }
         }
         try {
@@ -76,11 +78,16 @@ public class Requests extends CRUD {
         List<Profile> profiles = Profile.findAll();
         List<Material> materials = Material.findAll();
         String  username = session.get("username");
+        List<Long> mIds = new ArrayList<Long>();
         if(username!=null){
 
             User user = User.getByUserName(username);
             if(user.role.name.equalsIgnoreCase("operator") ) {
                 materials = user.materials;
+                for(Material m: materials){
+                    mIds.add(m.id);
+                }
+                profiles = Profile.em().createQuery("select p from Profile p join fetch p.materials m where m.id in :ids").setParameter("ids",mIds).getResultList();
             }
         }
         try {
