@@ -94,7 +94,8 @@
                         <label for="validation_name">&{'arrival_time'}(*)</label>
                     </div>
                     <div class="col-md-9 controls">
-                        <input class="form-control" data-rule-required="true" id="object_arrival_time" name="object.arrival_time" type="text" value="" readonly/>
+                        <input data-rule-required="true" class="form-control hide" id="object_arrival_time" name="object.arrival_time" type="text" />
+                        <input data-rule-required="true"  class="form-control"  id="object_arrival_time2" type="text" value="" readonly/>
                     </div>
                 </div>
                 <div class="form-group dark">
@@ -138,16 +139,16 @@
         });
     });
 
-    $('#object_arrival_time').datetimepicker({
-        format:'Y-m-d H:i',
-        onShow:function( ct ){
-            var date = jQuery('#object_stoptime').val();
-            this.setOptions({
-                minDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false,
-                minTime:date.substring(11)
-            })
-        },
-        timepicker:false
+
+    var arrival_time = $('#object_arrival_time');
+    var startDateTextBox = $('#object_starttime');
+    var endDateTextBox = $('#object_stoptime');
+
+    $('#object_arrival_time2').datepicker({
+        dateFormat:'yy-mm-dd',
+        onClose: function(dateText, inst) {
+            arrival_time.val($('#object_arrival_time2').val()+" 00:00");
+        }
     });
 
 

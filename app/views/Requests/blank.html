@@ -334,7 +334,7 @@
                 $.each(data.properties, function(i, item) {
                     prop+=item.name+":"+item.value+"<br />";
                 });
-                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
             }
         });
 
@@ -358,7 +358,7 @@
                 $.each(data.properties, function(i, item) {
                     prop+=item.name+":"+item.value+"<br />";
                 });
-                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, data.arrival_time, prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> <a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
             }
         });
 
@@ -387,37 +387,62 @@
 
     });
 
-    jQuery('#object_starttime').datetimepicker({
-        format:'Y-m-d H:i',
-        onShow:function( ct ){
-            this.setOptions({
-                minDate:0,
-                minTime:0,
-                maxDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false
-            })
-        }
-    });
-    jQuery('#object_stoptime').datetimepicker({
-        format:'Y-m-d H:i',
-        onShow:function( ct ){
-            var date = jQuery('#object_starttime').val();
-            this.setOptions({
-                minDate:jQuery('#object_starttime').val()?jQuery('#object_starttime').val():false,
-                minTime:date.substring(11)
-            })
-        }
-    });
-    $('#object_arrival_time').datetimepicker({
-        format:'Y-m-d H:i',
-        onShow:function( ct ){
-            var date = jQuery('#object_stoptime').val();
-            this.setOptions({
-                minDate:jQuery('#object_stoptime').val()?jQuery('#object_stoptime').val():false,
-                minTime:date.substring(11)
-            })
+
+    var startDateTextBox = $('#object_starttime');
+    var endDateTextBox = $('#object_stoptime');
+
+    var arrival_time = $('#object_arrival_time');
+
+    startDateTextBox.datetimepicker({
+        dateFormat:'yy-mm-dd',
+        timeFormat: 'HH:mm',
+        onClose: function(dateText, inst) {
+            if (endDateTextBox.val() != '') {
+                var testStartDate = startDateTextBox.datetimepicker('getDate');
+                var testEndDate = endDateTextBox.datetimepicker('getDate');
+
+                if (testStartDate > testEndDate)
+                    endDateTextBox.datetimepicker('setDate', testStartDate);
+            }
+            else {
+                endDateTextBox.val(dateText);
+            }
         },
-        timepicker:false
+        onSelect: function (selectedDateTime){
+            endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+        }
     });
+    endDateTextBox.datetimepicker({
+        dateFormat:'yy-mm-dd',
+        timeFormat: 'HH:mm',
+        onClose: function(dateText, inst) {
+            if (startDateTextBox.val() != '') {
+                var testStartDate = startDateTextBox.datetimepicker('getDate');
+                var testEndDate = endDateTextBox.datetimepicker('getDate');
+                if (testStartDate > testEndDate)
+                    startDateTextBox.datetimepicker('setDate', testEndDate);
+            }
+            else {
+                startDateTextBox.val(dateText);
+            }
+
+            if (arrival_time.val() != '') {
+                var testStartDate = endDateTextBox.datetimepicker('getDate');
+                var testEndDate = arrival_time.datetimepicker('getDate');
+
+                if (testStartDate > testEndDate)
+                    arrival_time.datetimepicker('setDate', testStartDate);
+            }
+            else {
+                arrival_time.val(dateText);
+            }
+        },
+        onSelect: function (selectedDateTime){
+            startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+            arrival_time.datetimepicker('option', 'minDate', endDateTextBox.datetimepicker('getDate') );
+        }
+    });
+
 
 
 </script>
