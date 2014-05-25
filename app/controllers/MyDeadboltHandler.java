@@ -28,6 +28,21 @@ import play.mvc.Controller;
  */
 public class MyDeadboltHandler extends Controller implements DeadboltHandler
 {
+    public static void authenticate(String username, String password) {
+        User user = User.getByUserName(username);
+        if (user == null) {
+            flash.error("Bad email or bad password");
+            flash.put("username", username);
+
+        } else if (User.connect(username, password) == null) {
+            flash.error("This account is not confirmed");
+            flash.put("username", username);
+
+        }
+        flash.success("Welcome back %s !", user.name);
+    }
+
+
     public void beforeRoleCheck()
     {
         // Note that if you provide your own implementation of Secure's Security class you would refer to that instead

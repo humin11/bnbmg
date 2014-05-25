@@ -59,7 +59,7 @@
                     <tbody>
                         #{list items: req.specifications, as:'spec'}
                             <tr>
-                                <td>${spec.material.name}</td>
+                                <td>${spec.material?.name}</td>
                                 <td>${spec.company}</td>
                                 <td>${spec.specification}</td>
 

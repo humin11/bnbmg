@@ -20,7 +20,7 @@ public class Profile extends Model {
 	public String name;
 
 	@ManyToMany
-	public List<Material> materials = new ArrayList<Material>();
+	public List<Material> materials;
 	
 	public String registration_number;
 	

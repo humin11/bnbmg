@@ -10,10 +10,10 @@
             <form class="form form-horizontal validate-form" method="post" action="@{Specs.create()}" id="specForm" name="specForm"  enctype="multipart/form-data">
                 <div class="form-group dark">
                     <div class="control-label col-md-3">
-                        <label for="validation_name">&{'specification'}(*)</label>
+                        <label for="validation_name">&{'specification'}</label>
                     </div>
                     <div class="col-md-9 controls">
-                        <input class="form-control" data-rule-required="true" id="object_specification" name="object.specification" type="text" value="" />
+                        <input class="form-control" id="object_specification" name="object.specification" type="text" value="" />
                     </div>
                 </div>
                 <div class="form-group dark">
@@ -86,7 +86,13 @@
                         <label for="validation_name">&{'unit'}(*)</label>
                     </div>
                     <div class="col-md-9 controls">
-                        <input class="form-control" data-rule-required="true" id="object_unit" name="object.unit" type="text" value="" />
+                        <select class='form-control'  data-rule-required="true" placeholder='请选择单位' id="object_unit" name="object.unit">
+                            <option value="顿">顿</option>
+                            <option value="卷">卷</option>
+                            <option value="个">个</option>
+                            <option value="米">米</option>
+                            <option value="公斤">公斤</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group dark">
@@ -138,7 +144,6 @@
 
         });
     });
-
 
     var arrival_time = $('#object_arrival_time');
     var startDateTextBox = $('#object_starttime');

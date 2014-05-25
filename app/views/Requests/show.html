@@ -10,8 +10,10 @@
                 <i class="icon-ok"></i> <span>&{'crud.show.title', type.modelName}</span>
             </h1>
             <div class="pull-right">
+                <a class="btn btn-sm btn-labeled btn-info" href="/public/采购规格模板.xls" target="_blank"><i class="btn-label icon fa fa-download"></i>&nbsp;&{'spec.template'}</a>
                 <button class="btn btn-sm btn-labeled btn-info" data-toggle="modal" data-target="#impSpecModal"><span class="btn-label icon fa fa-cloud-upload"></span>&{'spec.upload'}</button>
                 <a class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" href="@{Vender.newSpec()}" data-target="#specModal"><span class="btn-label icon fa fa-plus-circle"></span>&{'spec.new'}</a>
+                <a href="@{Requests.list()}" class="btn box-collapse btn-xs btn-info">返回</a>
             </div>
         </div>
     </div>

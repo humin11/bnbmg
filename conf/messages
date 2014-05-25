@@ -13,6 +13,7 @@ dashboard=首页
 file.imp=导入文件
 
 spec.import=导入采购规格
+spec.template=下载采购规格模板
 
 Material=物资类型
 Materials=物资类型管理
@@ -70,6 +71,7 @@ supplier.qualification=供应商资质
 supplier.import=导入供应商
 supplier.manager=供应商管理
 supplier.account.no=还没有登记供应商，请先注册
+supplier.template=下载供应商模板
 
 request=采购需求管理
 request.new=发布采购需求

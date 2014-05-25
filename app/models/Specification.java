@@ -28,7 +28,6 @@ public class Specification extends Model {
     @ManyToOne
     public Material material;
 
-    @Required
     public String specification;
 
     public double thickness;

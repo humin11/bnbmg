@@ -22,6 +22,31 @@ import utils.SendMessage;
 
 public class Vender extends Controller {
 
+    public static void toForget(){
+        render("Secure/forget.html");
+    }
+
+    public static void forget() throws Throwable{
+
+        String username = params.get("username");
+        String mobile = params.get("mobile");
+
+        Profile p = Profile.find("user.username=? and contact_phone=?", username, mobile).first();
+        if(p==null){
+            flash.error("用户名和手机不匹配，请确认您输入的信息");
+            flash.put("username", username);
+            toForget();
+        } else {
+            //SendSMS
+            SendMessage m = new SendMessage();
+            m.sendSms(p.contact_phone,"您的密码为:"+p.user.password, "0000009");
+            flash.success("您的密码已发送您的手机，请查收");
+            flash.put("username", username);
+            Secure.login();
+        }
+
+    }
+
     public static void editSpec(Long id){
         Specification spec = null;
         if(id!=null)
@@ -157,6 +182,7 @@ public class Vender extends Controller {
         toubiao.save();
         Request request = toubiao.request;
         request.status=1;
+        request.zb = true;
         request.save();
         List<Toubiao> toubiaos  = Toubiao.find("request.id=? and id!=?", request.id, id).fetch();
         for(Toubiao tb: toubiaos){
@@ -524,6 +550,7 @@ public class Vender extends Controller {
                             profile.user=user;
                         }
 
+                        profile.is_audit = 1;
                         cell = row.getCell(1);
                         value = cell.getStringCellValue();
                         profile.name = value;

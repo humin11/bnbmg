@@ -13,7 +13,9 @@
             <h1 class="pull-left">
                 <i class="icon-ok"></i> <span><a href="@{Requests.list()}"> ${req.name}</a></span>
             </h1>
-
+            <div class="pull-right">
+                <a href="@{Requests.list()}" class="btn box-collapse btn-xs btn-info">返回</a>
+            </div>
         </div>
     </div>
 </div>
@@ -61,11 +63,17 @@
                                                 #{/elseif}
                                             #{/if}
                                             #{else}
-                                                <a href="@{Vender.zhongbiao(toubiao.id)}" class="btn btn-xs btn-success">中标</a>
-                                                <a href="javascript:again('${toubiao.id}')"  class="btn btn-xs btn-warning">再次竞价</a>
+                                                #{ifnot req.zb}
+                                                    <a href="@{Vender.zhongbiao(toubiao.id)}" class="btn btn-xs btn-success">中标</a>
+                                                    <a href="javascript:again('${toubiao.id}')"  class="btn btn-xs btn-warning">再次竞价</a>
+                                                #{/ifnot}
+                                                #{else}
+                                                    <a href="#" class="btn btn-xs btn-default">中标</a>
+                                                    <a href="#"  class="btn btn-xs btn-default">再次竞价</a>
+                                                #{/else}
                                             #{/else}
                                     </td>
-                                    <td>${bj.specification.material.name}</td>
+                                    <td>${bj.specification.material?.name}</td>
                                     <td>${bj.specification.company}</td>
                                     <td>${bj.specification.specification}</td>
                                     <td>${bj.specification.amount}</td>

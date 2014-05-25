@@ -36098,7 +36098,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 		var tableId = settings.sTableId;
 		var previousSearch = settings.oPreviousSearch;
 		var features = settings.aanFeatures;
-		var input = '<input type="search" class="'+classes.sFilterInput+'"/>';
+		var input = '<input type="search" placeholder="搜索" class="'+classes.sFilterInput+'"/>';
 	
 		var str = settings.oLanguage.sSearch;
 		str = str.match(/_INPUT_/) ?
@@ -44022,7 +44022,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 				 *      } );
 				 *    } );
 				 */
-				"sFirst": "First",
+				"sFirst": "第一页",
 	
 	
 				/**
@@ -44045,7 +44045,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 				 *      } );
 				 *    } );
 				 */
-				"sLast": "Last",
+				"sLast": "最后一页",
 	
 	
 				/**
@@ -44068,7 +44068,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 				 *      } );
 				 *    } );
 				 */
-				"sNext": "Next",
+				"sNext": "后一页",
 	
 	
 				/**
@@ -44091,7 +44091,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 				 *      } );
 				 *    } );
 				 */
-				"sPrevious": "Previous"
+				"sPrevious": "前一页"
 			},
 	
 			/**
@@ -44114,7 +44114,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "没有数据",
 	
 	
 			/**
@@ -44146,7 +44146,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": "显示从_START_到_END_(共_TOTAL_项)",
 	
 	
 			/**
@@ -44167,7 +44167,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
+			"sInfoEmpty": "总记录0项",
 	
 	
 			/**
@@ -44189,7 +44189,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "(过滤出_MAX_项)",
 	
 	
 			/**
@@ -44307,7 +44307,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ entries",
+			"sLengthMenu": "显示_MENU_项",
 	
 	
 			/**
@@ -44331,7 +44331,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sLoadingRecords": "Loading...",
+			"sLoadingRecords": "加载中...",
 	
 	
 			/**
@@ -44352,7 +44352,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sProcessing": "Processing...",
+			"sProcessing": "处理中...",
 	
 	
 			/**
@@ -44387,7 +44387,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "搜索:",
 	
 	
 			/**
@@ -44434,7 +44434,7 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "No matching records found"
+			"sZeroRecords": "没有匹配项"
 		},
 	
 	
@@ -47757,7 +47757,7 @@ $.extend( true, $.fn.dataTable.defaults, {
 		"<'table-footer clearfix'<'DT-label'i><'DT-pagination'p>>",
 
 	"oLanguage": {
-		"sLengthMenu": "Per page: _MENU_",
+		"sLengthMenu": "每页数: _MENU_",
 		"sSearch": ""
 	}
 } );

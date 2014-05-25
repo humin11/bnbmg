@@ -24,14 +24,30 @@
     <!-- Right side -->
     <div class="signin-form">
 
+        #{if flash?.error}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+            ${flash.error}
+            </div>
+        #{/if}
+
+        #{if flash?.success}
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                ${flash.success}
+            </div>
+        #{/if}
+
         <!-- Form -->
         <form action="@{authenticate()}" id="signin-form_id" method="post">
             <div class="signin-text">
                 <span>&{'login'}</span>
             </div> <!-- / .signin-text -->
 
+
+
             <div class="form-group w-icon">
-                <input type="text" name="username" id="username" class="form-control input-lg" placeholder="&{'username'}">
+                <input type="text" name="username" id="username" class="form-control input-lg" placeholder="&{'username'}" value="${flash.username}">
                 <span class="fa fa-user signin-form-icon"></span>
             </div> <!-- / Username -->
 
@@ -41,8 +57,8 @@
             </div> <!-- / Password -->
 
             <div class="form-actions">
-                <input type="submit" value="&{'submit'}" class="signin-btn pull-right bg-primary">
-                *{<a href="#" class="forgot-password" id="forgot-password-link">Forgot your password?</a>}*
+                <input type="submit" value="&{'submit'}" class="signin-btn bg-primary">
+                <a href="@{Vender.toForget()}" class="forgot-password" id="forgot-password-link">忘记了密码？找回密码</a>
             </div> <!-- / .form-actions -->
         </form>
         <!-- / Form -->

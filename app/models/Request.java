@@ -70,4 +70,7 @@ public class Request extends Model {
 
     public Blob image;
 
+    @CRUD.Exclude
+    public Boolean zb = false;
+
 }
