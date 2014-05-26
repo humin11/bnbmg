@@ -68,7 +68,12 @@
                                                     <a href="javascript:again('${toubiao.id}')"  class="btn btn-xs btn-warning">再次竞价</a>
                                                 #{/ifnot}
                                                 #{else}
-                                                    <a href="#" class="btn btn-xs btn-default">中标</a>
+                                                    #{if toubiao.status=="1"}
+                                                        <a href="#" class="btn btn-xs btn-success">已中标</a>
+                                                    #{/if}
+                                                    #{else}
+                                                        <a href="#" class="btn btn-xs btn-default">未中标</a>
+                                                    #{/else}
                                                     <a href="#"  class="btn btn-xs btn-default">再次竞价</a>
                                                 #{/else}
                                             #{/else}
