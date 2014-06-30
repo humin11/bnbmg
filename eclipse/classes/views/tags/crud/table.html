@@ -90,7 +90,14 @@
 
 <script type="text/javascript">
 <!--
-$('table').dataTable();
+$('table').dataTable({ 
+	"dom": "<'table-header clearfix'<'table-caption'T><'DT-lf-right'<'DT-per-page'l><'DT-search'f>>r>"+
+	"t"+
+	"<'table-footer clearfix'<'DT-label'i><'DT-pagination'p>>", 
+	"tableTools": { 
+		"sSwfPath": "/public/images/copy_csv_xls_pdf.swf" 
+	}
+});
 $('table .dataTables_filter input').attr('placeholder', 'Search...');
 
 $('.dataTables_length>label>.form-control').select2().change(function(){

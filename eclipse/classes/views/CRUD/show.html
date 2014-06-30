@@ -26,8 +26,8 @@
 	        <div class="form-actions" style="margin-bottom: 0">
 				<div class="row">
 					<div class="col-sm-9 col-sm-offset-3">
-	            		<input type="submit" class="btn btn-primary btn-sm" name="_save" value="&{'crud.save', type.modelName}" />
-	            		<input type="submit" class="btn btn-primary btn-sm" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+                        <button type="submit" class="btn btn-primary btn-sm" name="_save"><i class="fa fa-save"></i>&nbsp;&nbsp;&{'crud.save', type.modelName}</button>
+                        <button type="submit" class="btn btn-info btn-sm" name="_saveAndContinue"><i class="fa fa-save"></i>&nbsp;&nbsp;&{'crud.saveAndContinue', type.modelName}</button>
 	            		<a class="btn btn-danger btn-sm" href="@{delete(object._key())}">&{'crud.delete', type.modelName}</a>
 	        		</div>
 	        	</div>

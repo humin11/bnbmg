@@ -196,9 +196,10 @@
                     <th>型号</th>
                     <th>采购量</th>
                     <th>单位</th>
-                    <th>到货时间</th>
-                    <th>属性</th>
-
+                    <th>最晚到货时间</th>
+                   
+                    <th>到货时间详注及其它备注</th>
+                     <th>属性</th>
                     <th></th>
                     </thead>
                     <tbody>
@@ -210,11 +211,13 @@
                                 <td>${spec.amount}</td>
                                 <td>${spec.unit}</td>
                                 <td>${spec.arrival_time}</td>
+                                 <td>${spec.description}</td>
                                 <td>
                                     #{list spec.properties,as:'prop'}
                                         ${prop.name}:${prop.value}<br>
                                     #{/list}
                                 </td>
+                               
                                 <td><a data-toggle="modal" href="/Vender/editSpec?id=${spec.id}" data-target="#editSpecModal"><i class="fa fa-edit"></i></a><a href="javascript:removeSpec('${spec.id}')"><i class="fa fa-times"></i></a></td>
                             </tr>
                         #{/list}
@@ -309,6 +312,13 @@
         return false;
     });
 
+
+    function editSpec(id){
+        $("#editSpecModalBody").empty();
+        $("#editSpecModalBody").load("/Vender/editSpec?id="+id);
+        $("#editSpecModal").modal("toggle");
+    }
+
     function removeSpec(id){
         var anSelected = table.$('tr.row_selected');
         if ( anSelected.length !== 0 ) {
@@ -353,7 +363,7 @@
                 $.each(data.properties, function(i, item) {
                     prop+=item.name+":"+item.value+"<br />";
                 });
-                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> &nbsp;<a href="#"><i class="fa fa-times"></i></a>']);
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), data.description, prop,'<a href="javascript:editSpec(\''+data.id+'\')"><i class="fa fa-edit"></i></a> &nbsp;<a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
             }
         });
 
@@ -377,7 +387,7 @@
                 $.each(data.properties, function(i, item) {
                     prop+=item.name+":"+item.value+"<br />";
                 });
-                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a> &nbsp;<a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+                table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), data.description, prop,'<a href="javascript:editSpec(\''+data.id+'\')"><i class="fa fa-edit"></i></a> &nbsp;<a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
             }
         });
 
@@ -398,7 +408,7 @@
                     $.each(data.properties, function(i, item) {
                         prop+=item.name+":"+item.value+"<br />";
                     });
-                    table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), prop,'<a data-toggle="modal" href="/Vender/editSpec?id='+data.id+'" data-target="#editSpecModal"><i class="fa fa-edit"></i></a><a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
+                    table.fnAddData([data.material.name, data.company, data.specification,data.amount, data.unit, new Date(data.arrival_time).getFullYear()+"-"+(new Date(data.arrival_time).getMonth()+1)+"-"+new Date(data.arrival_time).getDate(), data.description, prop,'<a  href="javascript:editSpec(\''+data.id+'\')"><i class="fa fa-edit"></i></a><a href="javascript:removeSpec(\''+data.id+'\')"><i class="fa fa-times"></i></a>']);
                 });
             }
         });
@@ -406,7 +416,7 @@
 
     });
 
-    jQuery('#object_starttime').datetimepicker({
+    $('#object_starttime').datetimepicker({
         var startDateTextBox = $('#object_starttime');
     var endDateTextBox = $('#object_stoptime');
 
@@ -415,6 +425,7 @@
     startDateTextBox.datetimepicker({
         dateFormat:'yy-mm-dd',
         timeFormat: 'HH:mm',
+        minDate:0,
         onClose: function(dateText, inst) {
             if (endDateTextBox.val() != '') {
                 var testStartDate = startDateTextBox.datetimepicker('getDate');
@@ -434,6 +445,7 @@
     endDateTextBox.datetimepicker({
         dateFormat:'yy-mm-dd',
         timeFormat: 'HH:mm',
+        minDate:0,
         onClose: function(dateText, inst) {
             if (startDateTextBox.val() != '') {
                 var testStartDate = startDateTextBox.datetimepicker('getDate');

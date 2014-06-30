@@ -47,9 +47,10 @@
                         selected = it._key() == _value?._key()
                     }
                 }
+               if(!it.name.equals("superadmin") && !it.name.equals("user")){
             }%
             <option value="${it._key()}" ${selected ? 'selected="true"'.raw() : ''}>${it.name}</option>
-            %{ } }%
+            %{ }} }%
         </select>
     #{/else}
 

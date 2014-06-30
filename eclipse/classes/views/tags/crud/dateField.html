@@ -5,7 +5,7 @@
 	    </label>
     </div>
     <div class="col-md-9 controls">
-	    <input id="${field.id}" class="form-control ${field.errorClass}" type="text" name="${field.name}" value="${_value?.format()}" size="10" />
+	    <input id="${field.id}" class="form-control ${field.errorClass}" type="text" name="${field.name}" value="${_value?.format()}" size="10" readonly/>
 	    #{ifError field.name}
 	        <span class=" has-error help-block">${field.error.raw()}</span>
 	    #{/ifError}
@@ -13,7 +13,5 @@
 #{/field}
 
 <script type="text/javascript">
-	$('#${field.id}').datetimepicker({
-        format:'Y-m-d h:i'
-    });
+
 </script>

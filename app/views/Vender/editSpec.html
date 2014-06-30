@@ -1,11 +1,4 @@
 
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="myEditModalLabel">编辑采购规格</h4>
-        </div>
-        <div class="modal-body">
 
             <form class="form form-horizontal validate-form" method="post" action="@{Specs.save(spec.id)}" id="editSpecForm" name="editSpecForm"  enctype="multipart/form-data">
                 <div class="form-group dark">
@@ -117,13 +110,7 @@
                 </div>
 
             </form>
-        </div> <!-- / .modal-body -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&{'close'}</button>
-            <button type="submit" class="btn btn-primary" id="editSpecSave"><i class="fa fa-save"></i>&nbsp;&{'save'}</button>
-        </div>
-    </div> <!-- / .modal-content -->
-</div> <!-- / .modal-dialog -->
+
 
 <script>
     $('#object_profiles').select2({ placeholder: '请选择供应商...' }).change(function(){
@@ -150,6 +137,7 @@
 
     $('#object_arrival_time').datetimepicker({
         format:'Y-m-d H:i',
+        minDate:0,
         onShow:function( ct ){
             var date = jQuery('#object_stoptime').val();
             this.setOptions({

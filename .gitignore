@@ -1,1 +1,11 @@
 tmp/
+precompiled/
+target/
+.settings/
+.classpath
+.project
+bnbmg.iml
+bnbmg.ipr
+bnbmg.iws
+eclipse/
+data/

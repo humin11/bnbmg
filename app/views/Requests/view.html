@@ -87,25 +87,28 @@
                 <th>型号</th>
                 <th>采购量</th>
                 <th>单位</th>
-                <th>到货时间</th>
-                <th>属性</th>
-
-
+                <th>最晚到货时间</th>
+                
+				<th>到货时间详注及其它备注</th>
+				<th>属性</th>
+				
                 </thead>
                 <tbody>
                     #{list items: object.specifications, as:'spec'}
                     <tr>
-                        <td>${spec.material.name}</td>
+                        <td>${spec.material?.name}</td>
                         <td>${spec.company}</td>
                         <td>${spec.specification}</td>
                         <td>${spec.amount}</td>
                         <td>${spec.unit}</td>
                         <td>${spec.arrival_time}</td>
+                        <td>${spec.description}</td>
                         <td>
                             #{list spec.properties, as:'prop'}
                                 ${prop.name}:${prop.value}<br/>
                             #{/list}
                         </td>
+                        
 
                     </tr>
                     #{/list}

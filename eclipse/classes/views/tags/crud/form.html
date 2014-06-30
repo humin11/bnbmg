@@ -45,7 +45,7 @@
 i++
 }}%
 
-<div class="form-group crud_${field.type}">
+<div class="form-group dark">
 
     %{ if(fieldsHandler[fieldName]) { }%
         %{
@@ -109,13 +109,13 @@ i++
                 %{
                     switch (it.annotation.annotationType().name.substring(21)) {
                         case "Required":
-                            out.println("\$('#object_"+fieldName+"').attr('required','true')")
+                            out.println("\$('#object_"+fieldName+"').attr('data-rule-required','true')")
                             break;
                         case "MinSize":
-                            out.println(messages.get('crud.help.minlength', it.annotation.value()))
-                            break;    
+                            out.println("\$('#object_"+fieldName+"').attr('data-rule-minlength',"+it.annotation.value()+")")
+                            break;
                         case "MaxSize":
-                            out.println(messages.get('crud.help.maxlength', it.annotation.value()))
+                            out.println("\$('#object_"+fieldName+"').attr('data-rule-maxlength',"+it.annotation.value()+")")
                             break;
                         case "Range":
                             out.println(messages.get('crud.help.range', it.annotation.min(), it.annotation.max()))
@@ -124,7 +124,7 @@ i++
                             out.println(messages.get('crud.help.min', it.annotation.value()))
                             break;
                         case "Email":
-                            out.println(messages.get('crud.help.email'))
+                            out.println("\$('#object_"+fieldName+"').attr('data-rule-email','true')")
                             break;
                         case "Equals":
                             out.println(messages.get('crud.help.equals', it.params.equalsTo))
